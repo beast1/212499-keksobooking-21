@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Егор Глебов](https://up.htmlacademy.ru/javascript/21/user/212499).
-* Наставник: `Неизвестно`.
+* Наставник: [Вадим Попов](https://htmlacademy.ru/profile/id1503771).
 
 ---
 
