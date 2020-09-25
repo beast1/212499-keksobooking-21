@@ -7,23 +7,20 @@ const data = {
   photos: [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`]
 };
 
+const dotOffset = {
+  X: 25,
+  Y: 70
+};
+
 const generateDots = (dotsRandomData, dotsCount) => {
   const dots = [];
-  const avatars = [];
 
-  for (let i = 0; i < dotsCount; i++) {
-    avatars.push(`img/avatars/user0${i + 1}.png`)
-  }
-
-  console.log(avatars);
-
-  for (let i = 0; i < dotsCount; i++) {
+  for (let i = 0; i < dotsCount; i++)  {
     const location = {
-      x: window.randomInteger(130, 630),
-      y: window.randomInteger(130, 630)
+      x: window.randomInteger(dotOffset.X, document.querySelector(`.map__overlay`).offsetWidth),
+      y: window.randomInteger(130 + dotOffset.Y, 630)
     }
     const features = [];
-    const avatarIndex = window.randomInteger(0,7);
 
     dotsRandomData.features.forEach((feature) => {
       if (window.randomInteger(0, 1)) {
@@ -33,7 +30,7 @@ const generateDots = (dotsRandomData, dotsCount) => {
 
     dots.push({
       author: {
-        avatar: `img/avatars/user0${avatarIndex}.png` //todo не должны повторятся
+        avatar: `img/avatars/user0${i + 1}.png`
       },
       offer: {
         title: `строка, заголовок предложения`,
@@ -53,15 +50,15 @@ const generateDots = (dotsRandomData, dotsCount) => {
         y: location.y
       }
     });
-
-    avatars.splice(avatarIndex, avatarIndex);
   }
 
   return dots;
 };
 
-const map = document.querySelector('.map');
-map.classList.remove('map--faded');
+const showMap = () => {
+  const map = document.querySelector('.map');
+  map.classList.remove('map--faded');
+};
 
 const drawDots = (dotsStructuredData) => {
   console.log(dotsStructuredData);
@@ -71,7 +68,7 @@ const drawDots = (dotsStructuredData) => {
 
   dotsStructuredData.forEach((dotData) => {
     const dotMarkup = dotsTemplate.content.querySelector('.map__pin').cloneNode(true);
-    dotMarkup.style = `left: ${dotData.location.x}px; top: ${dotData.location.y}px`; //todo добавить смещение
+    dotMarkup.style = `left: ${dotData.location.x - dotOffset.X}px; top: ${dotData.location.y - dotOffset.Y}px`;
     dotMarkup.attributes.src = dotData.author.avatar;
     dotMarkup.attributes.alt = dotData.offer.title;
     dotsFragment.appendChild(dotMarkup);
@@ -81,3 +78,4 @@ const drawDots = (dotsStructuredData) => {
 };
 
 drawDots(generateDots(data, 8));
+showMap();
