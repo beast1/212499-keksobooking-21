@@ -31,17 +31,7 @@ const generateLocation = () => {
 };
 
 const generateFeatures = (markerRandomData) => {
-  // const features = [];
-  // markerRandomData.features.forEach((feature) => {
-  //   if (window.randomInteger(0, 1)) {
-  //     features.push(feature);
-  //   }
-  // });
-  return markerRandomData.features.map((feature) => {
-    if (window.randomInteger(0, 1)) {
-      return feature;
-    }
-  });
+  return markerRandomData.features.filter(() => window.randomInteger(0, 1));
 };
 
 const generateMarkers = (markerRandomData, markersCount) => {
