@@ -1,49 +1,72 @@
 'use strict';
 
-const data = {
+const dataPatterns = {
   types: [`palace`, `flat`, `house`, `bungalow`],
   checkin: [`12:00`, `13:00`, `14:00`],
   features: [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`],
   photos: [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`]
 };
 
-const dotOffset = {
+const markerOffset = {
   X: 25,
   Y: 70
 };
 
-const generateDots = (dotsRandomData, dotsCount) => {
-  const dots = [];
+const mapOverlayY = {
+  START: 130,
+  END: 630
+};
 
-  for (let i = 0; i < dotsCount; i++)  {
-    const location = {
-      x: window.randomInteger(dotOffset.X, document.querySelector(`.map__overlay`).offsetWidth),
-      y: window.randomInteger(130 + dotOffset.Y, 630)
+const markerTextContent = {
+  TITLE: `строка, заголовок предложения`,
+  DESCRIPTION: `строка с описанием`
+};
+
+const generateLocation = () => {
+  const mapOverlay = document.querySelector(`.map__overlay`);
+  return {
+    x: window.randomInteger(markerOffset.X, mapOverlay.offsetWidth),
+    y: window.randomInteger(mapOverlayY.START + markerOffset.Y, mapOverlayY.END)
+  };
+};
+
+const generateFeatures = (markerRandomData) => {
+  // const features = [];
+  // markerRandomData.features.forEach((feature) => {
+  //   if (window.randomInteger(0, 1)) {
+  //     features.push(feature);
+  //   }
+  // });
+  return markerRandomData.features.map((feature) => {
+    if (window.randomInteger(0, 1)) {
+      return feature;
     }
-    const features = [];
+  });
+};
 
-    dotsRandomData.features.forEach((feature) => {
-      if (window.randomInteger(0, 1)) {
-        features.push(feature);
-      }
-    });
+const generateMarkers = (markerRandomData, markersCount) => {
+  const markers = [];
 
-    dots.push({
+  for (let i = 0; i < markersCount; i++) {
+    const location = generateLocation();
+    const features = generateFeatures(markerRandomData);
+
+    markers.push({
       author: {
         avatar: `img/avatars/user0${i + 1}.png`
       },
       offer: {
-        title: `строка, заголовок предложения`,
+        title: markerTextContent.TITLE,
         address: `${location.x}, ${location.y}`,
         price: window.randomInteger(999, 9999),
-        type: dotsRandomData.types[window.randomInteger(0, 3)],
+        type: markerRandomData.types[window.randomInteger(0, 3)],
         rooms: window.randomInteger(1, 5),
         guests: window.randomInteger(1, 8),
-        checkin: dotsRandomData.checkin[window.randomInteger(0, 2)],
-        checkout: dotsRandomData.checkin[window.randomInteger(0, 2)],
-        features: features,
-        description: `строка с описанием`,
-        photos: dotsRandomData.photos[window.randomInteger(0, 2)]
+        checkin: markerRandomData.checkin[window.randomInteger(0, 2)],
+        checkout: markerRandomData.checkin[window.randomInteger(0, 2)],
+        features,
+        description: markerTextContent.DESCRIPTION,
+        photos: markerRandomData.photos[window.randomInteger(0, 2)]
       },
       location: {
         x: location.x,
@@ -52,30 +75,29 @@ const generateDots = (dotsRandomData, dotsCount) => {
     });
   }
 
-  return dots;
+  return markers;
 };
 
 const showMap = () => {
-  const map = document.querySelector('.map');
-  map.classList.remove('map--faded');
+  const map = document.querySelector(`.map`);
+  map.classList.remove(`map--faded`);
 };
 
-const drawDots = (dotsStructuredData) => {
-  console.log(dotsStructuredData);
-  const dotsTemplate = document.querySelector(`#pin`);
-  const dotsFragment = document.createDocumentFragment();
-  const dotsParent = document.querySelector(`.map__pins`);
+const drawMarkers = (markersStructuredData) => {
+  const markersTemplate = document.querySelector(`#pin`);
+  const markersFragment = document.createDocumentFragment();
+  const markersParent = document.querySelector(`.map__pins`);
 
-  dotsStructuredData.forEach((dotData) => {
-    const dotMarkup = dotsTemplate.content.querySelector('.map__pin').cloneNode(true);
-    dotMarkup.style = `left: ${dotData.location.x - dotOffset.X}px; top: ${dotData.location.y - dotOffset.Y}px`;
-    dotMarkup.attributes.src = dotData.author.avatar;
-    dotMarkup.attributes.alt = dotData.offer.title;
-    dotsFragment.appendChild(dotMarkup);
+  markersStructuredData.forEach((markerData) => {
+    const markerMarkup = markersTemplate.content.querySelector(`.map__pin`).cloneNode(true);
+    markerMarkup.style = `left: ${markerData.location.x - markerOffset.X}px; top: ${markerData.location.y - markerOffset.Y}px`;
+    markerMarkup.attributes.src = markerData.author.avatar;
+    markerMarkup.attributes.alt = markerData.offer.title;
+    markersFragment.appendChild(markerMarkup);
   });
 
-  dotsParent.appendChild(dotsFragment);
+  markersParent.appendChild(markersFragment);
 };
 
-drawDots(generateDots(data, 8));
+drawMarkers(generateMarkers(dataPatterns, 8));
 showMap();
