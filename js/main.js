@@ -19,7 +19,7 @@ const mapOverlayY = {
 
 const markerTextContent = {
   TITLE: `Уютный очаг на краю города`,
-  DESCRIPTION: `строка с описанием`
+  DESCRIPTION: `Теплое место, последнее пристанище расплавленного ума`
 };
 
 const generateLocation = () => {
@@ -101,7 +101,11 @@ const types = {
 
 const drawTextBlock = (className, text, parent = document) => {
   const node = parent.querySelector(className);
-  node.textContent = text;
+  if (node && text) {
+    node.textContent = text;
+  } else if (node) {
+    node.style.display = `none`;
+  }
 };
 
 const drawCardFeatures = (data, parent = document) => {
@@ -116,19 +120,22 @@ const drawCardFeatures = (data, parent = document) => {
   featuresParent.appendChild(featuresFragment);
 };
 
-// const drawListBlock = (className, dataArr, parent = document, callback) => {
-//   const listParent = parent.querySelector(className);
-//   const featuresFragment = document.createDocumentFragment();
-//   // передать элемент dataArr в коллбек
-//   dataArr.forEach(callback());
-//   // housesData.offer.features.forEach((feature) => {
-//   //   const featureMarkup = featuresParent.querySelector(`.popup__feature`).cloneNode(true);
-//   //   featureMarkup.className = `popup__feature popup__feature--${feature}`;
-//   //   featuresFragment.appendChild(featureMarkup);
-//   // });
-//   listParent.innerHTML = ``;
-//   listParent.appendChild(featuresFragment);
-// };
+const drawCardPhotos = (data, parent = document) => {
+  const photosParent = parent.querySelector(`.popup__photos`);
+  const photosFragment = document.createDocumentFragment();
+  data.forEach((photo) => {
+    const photoMarkup = photosParent.querySelector(`.popup__photo`).cloneNode(true);
+    photoMarkup.src = photo;
+    photosFragment.appendChild(photoMarkup);
+  });
+  photosParent.innerHTML = ``;
+  photosParent.appendChild(photosFragment);
+};
+
+const drawCardAvatar = (data, parent = document) => {
+  const avatar = parent.querySelector(`.popup__avatar`);
+  avatar.src = data;
+};
 
 const drawCard = (housesData) => {
   const cardTemplate = document.querySelector(`#card`);
@@ -143,25 +150,10 @@ const drawCard = (housesData) => {
   drawTextBlock(`.popup__text--capacity`, `${housesData.offer.rooms} комнаты для ${housesData.offer.guests} гостей`, cardMarkup);
   drawTextBlock(`.popup__text--time`, `Заезд после ${housesData.offer.checkin}, выезд до ${housesData.offer.checkout}`, cardMarkup);
   drawCardFeatures(housesData.offer.features, cardMarkup);
-  const description = cardMarkup.querySelector(`.popup__description`);
-  description.textContent = housesData.offer.description;
-  // В блок .popup__photos выведите все фотографии из списка offer.photos. Каждая из строк массива photos должна записываться как src соответствующего изображения.
-  const photosParent = cardMarkup.querySelector(`.popup__photos`);
-  const photosFragment = document.createDocumentFragment();
-  housesData.offer.photos.forEach((photo) => {
-    const photoMarkup = photosParent.querySelector(`.popup__photo`).cloneNode(true);
-    photoMarkup.src = photo;
-    photosFragment.appendChild(photoMarkup);
-  });
-  photosParent.innerHTML = ``;
-  photosParent.appendChild(photosFragment);
-  // Замените src у аватарки пользователя — изображения, которое записано в .popup__avatar — на значения поля author.avatar отрисовываемого объекта.
-  const avatar = cardMarkup.querySelector(`.popup__avatar`);
-  avatar.src = housesData.author.avatar;
-  console.log(cardMarkup);
+  drawTextBlock(`.popup__description`, housesData.offer.description, cardMarkup);
+  drawCardPhotos(housesData.offer.photos, cardMarkup);
+  drawCardAvatar(housesData.author.avatar, cardMarkup);
   // todo Если данных для заполнения не хватает, соответствующий блок в карточке скрывается.
-
-  // Вставьте полученный DOM-элемент в блок .map перед блоком.map__filters-container
   filtersContainer.before(cardMarkup);
 };
 
