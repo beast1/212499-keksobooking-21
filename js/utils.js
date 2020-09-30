@@ -9,7 +9,7 @@ window.hideNode = (node) => {
   node.style.display = `none`;
 };
 
-window.drawTextBlock = (className, text, parent = document) => {
+window.displayTextBlock = (className, text, parent = document) => {
   const node = parent.querySelector(className);
   if (node && text) {
     node.textContent = text;

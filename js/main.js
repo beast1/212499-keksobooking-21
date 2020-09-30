@@ -83,7 +83,7 @@ const showMap = () => {
   map.classList.remove(`map--faded`);
 };
 
-const drawMarkers = (markersStructuredData) => {
+const displayMarkers = (markersStructuredData) => {
   const markersTemplate = document.querySelector(`#pin`);
   const markersFragment = document.createDocumentFragment();
   const markersParent = document.querySelector(`.map__pins`);
@@ -99,7 +99,7 @@ const drawMarkers = (markersStructuredData) => {
   markersParent.appendChild(markersFragment);
 };
 
-const drawCardFeatures = (data, parent = document) => {
+const displayCardFeatures = (data, parent = document) => {
   const featuresParent = parent.querySelector(`.popup__features`);
   if (data && featuresParent) {
     const featuresFragment = document.createDocumentFragment();
@@ -115,7 +115,7 @@ const drawCardFeatures = (data, parent = document) => {
   }
 };
 
-const drawCardPhotos = (data, parent = document) => {
+const displayCardPhotos = (data, parent = document) => {
   const photosParent = parent.querySelector(`.popup__photos`);
   if (data && photosParent) {
     const photosFragment = document.createDocumentFragment();
@@ -131,7 +131,7 @@ const drawCardPhotos = (data, parent = document) => {
   }
 };
 
-const drawCardAvatar = (data, parent = document) => {
+const displayCardAvatar = (data, parent = document) => {
   const avatar = parent.querySelector(`.popup__avatar`);
   if (data && avatar) {
     avatar.src = data;
@@ -140,26 +140,26 @@ const drawCardAvatar = (data, parent = document) => {
   }
 };
 
-const drawCard = (housesData) => {
+const displayCard = (housesData) => {
   const cardTemplate = document.querySelector(`#card`);
   const cardMarkup = cardTemplate.content.querySelector(`.map__card`).cloneNode(true);
   const filtersContainer = document.querySelector(`.map__filters-container`);
 
-  window.drawTextBlock(`.popup__title`, housesData.offer.title, cardMarkup);
-  window.drawTextBlock(`.popup__text--address`, housesData.offer.address, cardMarkup);
-  window.drawTextBlock(`.popup__text--price`, `${housesData.offer.price}₽/ночь`, cardMarkup);
-  window.drawTextBlock(`.popup__type`, types[housesData.offer.type], cardMarkup);
-  window.drawTextBlock(`.popup__text--capacity`, `${housesData.offer.rooms} комнаты для ${housesData.offer.guests} гостей`, cardMarkup);
-  window.drawTextBlock(`.popup__text--time`, `Заезд после ${housesData.offer.checkin}, выезд до ${housesData.offer.checkout}`, cardMarkup);
-  drawCardFeatures(housesData.offer.features, cardMarkup);
-  window.drawTextBlock(`.popup__description`, housesData.offer.description, cardMarkup);
-  drawCardPhotos(housesData.offer.photos, cardMarkup);
-  drawCardAvatar(housesData.author.avatar, cardMarkup);
+  window.displayTextBlock(`.popup__title`, housesData.offer.title, cardMarkup);
+  window.displayTextBlock(`.popup__text--address`, housesData.offer.address, cardMarkup);
+  window.displayTextBlock(`.popup__text--price`, `${housesData.offer.price}₽/ночь`, cardMarkup);
+  window.displayTextBlock(`.popup__type`, types[housesData.offer.type], cardMarkup);
+  window.displayTextBlock(`.popup__text--capacity`, `${housesData.offer.rooms} комнаты для ${housesData.offer.guests} гостей`, cardMarkup);
+  window.displayTextBlock(`.popup__text--time`, `Заезд после ${housesData.offer.checkin}, выезд до ${housesData.offer.checkout}`, cardMarkup);
+  displayCardFeatures(housesData.offer.features, cardMarkup);
+  window.displayTextBlock(`.popup__description`, housesData.offer.description, cardMarkup);
+  displayCardPhotos(housesData.offer.photos, cardMarkup);
+  displayCardAvatar(housesData.author.avatar, cardMarkup);
 
   filtersContainer.before(cardMarkup);
 };
 
 const housesData = generateHousesData(houseDataPatterns, 8);
-drawMarkers(housesData);
-drawCard(housesData[0]);
+displayMarkers(housesData);
+displayCard(housesData[0]);
 showMap();
