@@ -1,6 +1,6 @@
 'use strict';
 
-const initPin = () => {
+window.initPin = () => {
   const mainPin = document.querySelector(`.map__pin--main`);
   const activateForm = (state) => {
     const form = document.querySelector(`.ad-form`);
@@ -12,6 +12,8 @@ const initPin = () => {
 
     if (state) {
       form.classList.remove(`ad-form--disabled`);
+      window.pins.draw(window.housesData);
+      window.drawCard(window.housesData[0]);
     } else {
       form.classList.add(`ad-form--disabled`);
     }
@@ -104,4 +106,16 @@ const initPin = () => {
   setMapState(false);
 };
 
-initPin();
+window.initPin();
+
+
+//для меток похожих объявлений должны быть созданы обработчики событий, которые вызывают показ карточки с соответствующими данными.
+// Доработайте проект так, чтобы пользователь мог открыть карточку любого доступного объявления;
+//
+// Добавьте возможность закрытия карточки с подробной информацией по нажатию клавиши Esc и клике по иконке закрытия;
+//
+// Добавьте поддержку открытия карточки объявления с клавиатуры. Карточка объявления для выбранной метки открывается при нажатии на клавишу Enter.
+//
+//   Сделайте так, чтобы одновременно могла быть открыта только одна карточка объявления.
+//
+//   Обратите внимание, что у главной метки .map__pin--main не может быть карточки объявления.

@@ -7,7 +7,7 @@ const houseDataPatterns = {
   photos: [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`]
 };
 
-const markerOffset = {
+const pinOffset = {
   X: 25,
   Y: 70
 };
@@ -17,7 +17,7 @@ const mapOverlayY = {
   END: 630
 };
 
-const markerTextContent = {
+const pinTextContent = {
   TITLE: `Уютный очаг на краю города`,
   DESCRIPTION: `Теплое место, последнее пристанище расплавленного ума`
 };
@@ -32,8 +32,8 @@ const types = {
 const generateLocation = () => {
   const mapOverlay = document.querySelector(`.map__overlay`);
   return {
-    x: window.randomInteger(markerOffset.X, mapOverlay.offsetWidth),
-    y: window.randomInteger(mapOverlayY.START + markerOffset.Y, mapOverlayY.END)
+    x: window.randomInteger(pinOffset.X, mapOverlay.offsetWidth),
+    y: window.randomInteger(mapOverlayY.START + pinOffset.Y, mapOverlayY.END)
   };
 };
 
@@ -45,18 +45,18 @@ const generatePhotos = (houseRandomData) => {
   return houseRandomData.photos.filter(() => window.randomInteger(0, 1));
 };
 
-const generateHousesData = (houseRandomData, markersCount) => {
-  const markers = [];
+const generateHousesData = (houseRandomData, pinsCount) => {
+  const pins = [];
 
-  for (let i = 0; i < markersCount; i++) {
+  for (let i = 0; i < pinsCount; i++) {
     const location = generateLocation();
 
-    markers.push({
+    pins.push({
       author: {
         avatar: `img/avatars/user0${i + 1}.png`
       },
       offer: {
-        title: markerTextContent.TITLE,
+        title: pinTextContent.TITLE,
         address: `${location.x}, ${location.y}`,
         price: window.randomInteger(999, 9999),
         type: houseRandomData.types[window.randomInteger(0, 3)],
@@ -65,7 +65,7 @@ const generateHousesData = (houseRandomData, markersCount) => {
         checkin: houseRandomData.checkin[window.randomInteger(0, 2)],
         checkout: houseRandomData.checkin[window.randomInteger(0, 2)],
         features: generateFeatures(houseRandomData),
-        description: markerTextContent.DESCRIPTION,
+        description: pinTextContent.DESCRIPTION,
         photos: generatePhotos(houseRandomData)
       },
       location: {
@@ -75,23 +75,30 @@ const generateHousesData = (houseRandomData, markersCount) => {
     });
   }
 
-  return markers;
+  return pins;
 };
 
-const drawMarkers = (markersStructuredData) => {
-  const markersTemplate = document.querySelector(`#pin`);
-  const markersFragment = document.createDocumentFragment();
-  const markersParent = document.querySelector(`.map__pins`);
-
-  markersStructuredData.forEach((markerData) => {
-    const markerMarkup = markersTemplate.content.querySelector(`.map__pin`).cloneNode(true);
-    markerMarkup.style = `left: ${markerData.location.x - markerOffset.X}px; top: ${markerData.location.y - markerOffset.Y}px`;
-    markerMarkup.attributes.src = markerData.author.avatar;
-    markerMarkup.attributes.alt = markerData.offer.title;
-    markersFragment.appendChild(markerMarkup);
-  });
-
-  markersParent.appendChild(markersFragment);
+const pinsInit = () => {
+  const pinsTemplate = document.querySelector(`#pin`);
+  const pinsFragment = document.createDocumentFragment();
+  const pinsParent = document.querySelector(`.map__pins`);
+  const drawPins = (pinsStructuredData) => {
+    pinsStructuredData.forEach((pinData) => {
+      const pinMarkup = pinsTemplate.content.querySelector(`.map__pin`).cloneNode(true);
+      pinMarkup.style = `left: ${pinData.location.x - pinOffset.X}px; top: ${pinData.location.y - pinOffset.Y}px`;
+      pinMarkup.attributes.src = pinData.author.avatar;
+      pinMarkup.attributes.alt = pinData.offer.title;
+      pinsFragment.appendChild(pinMarkup);
+    });
+    pinsParent.appendChild(pinsFragment);
+  };
+  const clearPins = () => {
+    pinsParent.innerHTML = ``;
+  };
+  return {
+    draw: drawPins,
+    clear: clearPins
+  };
 };
 
 const drawCardFeatures = (data, parent = document) => {
@@ -135,7 +142,7 @@ const drawCardAvatar = (data, parent = document) => {
   }
 };
 
-const drawCard = (housesData) => {
+window.drawCard = (housesData) => {
   const cardTemplate = document.querySelector(`#card`);
   const cardMarkup = cardTemplate.content.querySelector(`.map__card`).cloneNode(true);
   const filtersContainer = document.querySelector(`.map__filters-container`);
@@ -154,6 +161,6 @@ const drawCard = (housesData) => {
   filtersContainer.before(cardMarkup);
 };
 
-const housesData = generateHousesData(houseDataPatterns, 8);
-drawMarkers(housesData);
-drawCard(housesData[0]);
+window.pins = pinsInit();
+window.housesData = generateHousesData(houseDataPatterns, 8);
+
