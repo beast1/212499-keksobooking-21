@@ -13,6 +13,8 @@ window.initPin = () => {
     if (state) {
       form.classList.remove(`ad-form--disabled`);
       window.pins.draw(window.housesData);
+      initRoomsValidate();
+      initTitleValidate();
     } else {
       form.classList.add(`ad-form--disabled`);
     }
@@ -33,7 +35,6 @@ window.initPin = () => {
       const map = document.querySelector(`.map`);
       map.classList.remove(`map--faded`);
       activateForm(true);
-      initRoomsValidate();
       mainPin.removeEventListener(`mousedown`, onPinMousedown);
       mainPin.removeEventListener(`keydown`, onPinKeydown);
     } else {
@@ -99,6 +100,26 @@ window.initPin = () => {
     };
 
     roomsSelect.addEventListener(`input`, onRoomsSelectInput);
+  };
+
+  const initTitleValidate = () => {
+    const MIN_NAME_LENGTH = 30;
+    const MAX_NAME_LENGTH = 100;
+    const titleInput = document.querySelector(`#title`);
+    const onTitleInput = () => {
+      const valueLength = titleInput.value.length;
+
+      if (valueLength < MIN_NAME_LENGTH) {
+        titleInput.setCustomValidity(`Ещё ${MIN_NAME_LENGTH - valueLength} симв.`);
+      } else if (valueLength > MAX_NAME_LENGTH) {
+        titleInput.setCustomValidity(`Удалите лишние ${valueLength - MAX_NAME_LENGTH} симв.`);
+      } else {
+        titleInput.setCustomValidity(``);
+      }
+
+      titleInput.reportValidity();
+    };
+    titleInput.addEventListener(`input`, onTitleInput);
   };
 
   setAddress();
