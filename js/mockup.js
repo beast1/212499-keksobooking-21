@@ -77,23 +77,49 @@ const generateHousesData = (houseRandomData, pinsCount) => {
 
   return pins;
 };
-
-const pinsInit = () => {
+//
+//
+//   Сделайте так, чтобы одновременно могла быть открыта только одна карточка объявления.
+//
+//   Обратите внимание, что у главной метки .map__pin--main не может быть карточки объявления.
+const initPins = () => {
   const pinsTemplate = document.querySelector(`#pin`);
   const pinsFragment = document.createDocumentFragment();
   const pinsParent = document.querySelector(`.map__pins`);
+  //для меток похожих объявлений должны быть созданы обработчики событий, которые вызывают показ карточки с соответствующими данными.
+  const onPinsParentClick = (e) => {
+    if (e.target.offsetParent.dataset.idForCard) {
+      console.log(e.target.offsetParent);
+      // Доработайте проект так, чтобы пользователь мог открыть карточку любого доступного объявления;
+      window.card.draw(window.housesData[e.target.offsetParent.dataset.idForCard]);
+    }
+  };
+  // Добавьте поддержку открытия карточки объявления с клавиатуры. Карточка объявления для выбранной метки открывается при нажатии на клавишу Enter.
+  const onPinsParentKeydown = (e) => {
+    //todo добавить обработку клавиатуры
+    console.log(e);
+    // if (e.target.offsetParent.dataset.idForCard) {
+    //   console.log(e.target.offsetParent);
+    //   window.card.draw(window.housesData[e.target.offsetParent.dataset.idForCard]);
+    // }
+  };
   const drawPins = (pinsStructuredData) => {
-    pinsStructuredData.forEach((pinData) => {
+    pinsStructuredData.forEach((pinData, i) => {
       const pinMarkup = pinsTemplate.content.querySelector(`.map__pin`).cloneNode(true);
       pinMarkup.style = `left: ${pinData.location.x - pinOffset.X}px; top: ${pinData.location.y - pinOffset.Y}px`;
       pinMarkup.attributes.src = pinData.author.avatar;
       pinMarkup.attributes.alt = pinData.offer.title;
+      pinMarkup.dataset.idForCard = i;
       pinsFragment.appendChild(pinMarkup);
     });
     pinsParent.appendChild(pinsFragment);
+    pinsParent.addEventListener(`click`, onPinsParentClick);
+    pinsParent.addEventListener(`keydown`, onPinsParentKeydown);
   };
   const clearPins = () => {
     pinsParent.innerHTML = ``;
+    pinsParent.removeEventListener(`click`, onPinsParentClick);
+    pinsParent.removeEventListener(`keydown`, onPinsParentKeydown);
   };
   return {
     draw: drawPins,
@@ -101,66 +127,81 @@ const pinsInit = () => {
   };
 };
 
-const drawCardFeatures = (data, parent = document) => {
-  const featuresParent = parent.querySelector(`.popup__features`);
-  if (data && featuresParent) {
-    const featuresFragment = document.createDocumentFragment();
-    data.forEach((feature) => {
-      const featureMarkup = featuresParent.querySelector(`.popup__feature`).cloneNode(true);
-      featureMarkup.className = `popup__feature popup__feature--${feature}`;
-      featuresFragment.appendChild(featureMarkup);
-    });
-    featuresParent.innerHTML = ``;
-    featuresParent.appendChild(featuresFragment);
-  } else if (featuresParent) {
-    window.hideNode(featuresParent);
-  }
-};
-
-const drawCardPhotos = (data, parent = document) => {
-  const photosParent = parent.querySelector(`.popup__photos`);
-  if (data && photosParent) {
-    const photosFragment = document.createDocumentFragment();
-    data.forEach((photo) => {
-      const photoMarkup = photosParent.querySelector(`.popup__photo`).cloneNode(true);
-      photoMarkup.src = photo;
-      photosFragment.appendChild(photoMarkup);
-    });
-    photosParent.innerHTML = ``;
-    photosParent.appendChild(photosFragment);
-  } else if (photosParent) {
-    window.hideNode(photosParent);
-  }
-};
-
-const drawCardAvatar = (data, parent = document) => {
-  const avatar = parent.querySelector(`.popup__avatar`);
-  if (data && avatar) {
-    avatar.src = data;
-  } else if (avatar) {
-    window.hideNode(avatar);
-  }
-};
-
-window.drawCard = (housesData) => {
+const initCard = () => {
   const cardTemplate = document.querySelector(`#card`);
   const cardMarkup = cardTemplate.content.querySelector(`.map__card`).cloneNode(true);
+  const cardCloseBtn = cardMarkup.querySelector(`.popup__close`);
   const filtersContainer = document.querySelector(`.map__filters-container`);
+  const featuresParent = cardMarkup.querySelector(`.popup__features`);
+  const featureMarkup = featuresParent.querySelector(`.popup__feature`).cloneNode(true);
+  const photosParent = cardMarkup.querySelector(`.popup__photos`);
+  const photoMarkup = photosParent.querySelector(`.popup__photo`).cloneNode(true);
+  const drawCardFeatures = (data) => {
+    if (data && featuresParent) {
+      const featuresFragment = document.createDocumentFragment();
+      data.forEach((feature) => {
+        featureMarkup.className = `popup__feature popup__feature--${feature}`;
+        featuresFragment.appendChild(featureMarkup);
+      });
+      featuresParent.innerHTML = ``;
+      featuresParent.appendChild(featuresFragment);
+    } else if (featuresParent) {
+      window.hideNode(featuresParent);
+    }
+  };
+  const drawCardPhotos = (data) => {
+    if (data && photosParent) {
+      const photosFragment = document.createDocumentFragment();
+      data.forEach((photo) => {
+        photoMarkup.src = photo;
+        photosFragment.appendChild(photoMarkup);
+      });
+      photosParent.innerHTML = ``;
+      photosParent.appendChild(photosFragment);
+    } else if (photosParent) {
+      window.hideNode(photosParent);
+    }
+  };
+  const drawCardAvatar = (data) => {
+    const avatar = cardMarkup.querySelector(`.popup__avatar`);
+    if (data && avatar) {
+      avatar.src = data;
+    } else if (avatar) {
+      window.hideNode(avatar);
+    }
+  };
+  const onCardCloseBtnClick = () => {
+    window.card.clear();
+  };
+  const drawCard = (housesData) => {
+    window.drawTextBlock(`.popup__title`, housesData.offer.title, cardMarkup);
+    window.drawTextBlock(`.popup__text--address`, housesData.offer.address, cardMarkup);
+    window.drawTextBlock(`.popup__text--price`, `${housesData.offer.price}₽/ночь`, cardMarkup);
+    window.drawTextBlock(`.popup__type`, types[housesData.offer.type], cardMarkup);
+    window.drawTextBlock(`.popup__text--capacity`, `${housesData.offer.rooms} комнаты для ${housesData.offer.guests} гостей`, cardMarkup);
+    window.drawTextBlock(`.popup__text--time`, `Заезд после ${housesData.offer.checkin}, выезд до ${housesData.offer.checkout}`, cardMarkup);
+    drawCardFeatures(housesData.offer.features);
+    window.drawTextBlock(`.popup__description`, housesData.offer.description, cardMarkup);
+    drawCardPhotos(housesData.offer.photos);
+    drawCardAvatar(housesData.author.avatar);
 
-  window.drawTextBlock(`.popup__title`, housesData.offer.title, cardMarkup);
-  window.drawTextBlock(`.popup__text--address`, housesData.offer.address, cardMarkup);
-  window.drawTextBlock(`.popup__text--price`, `${housesData.offer.price}₽/ночь`, cardMarkup);
-  window.drawTextBlock(`.popup__type`, types[housesData.offer.type], cardMarkup);
-  window.drawTextBlock(`.popup__text--capacity`, `${housesData.offer.rooms} комнаты для ${housesData.offer.guests} гостей`, cardMarkup);
-  window.drawTextBlock(`.popup__text--time`, `Заезд после ${housesData.offer.checkin}, выезд до ${housesData.offer.checkout}`, cardMarkup);
-  drawCardFeatures(housesData.offer.features, cardMarkup);
-  window.drawTextBlock(`.popup__description`, housesData.offer.description, cardMarkup);
-  drawCardPhotos(housesData.offer.photos, cardMarkup);
-  drawCardAvatar(housesData.author.avatar, cardMarkup);
-
-  filtersContainer.before(cardMarkup);
+    filtersContainer.before(cardMarkup);
+    // todo заменить на метод из utils
+    cardMarkup.classList.remove(`hidden`);
+    cardCloseBtn.addEventListener(`click`, onCardCloseBtnClick);
+  };
+  const clearCard = () => {
+    cardMarkup.classList.add(`hidden`);
+    console.log(filtersContainer);
+    cardCloseBtn.removeEventListener(`click`, onCardCloseBtnClick);
+  };
+  return {
+    draw: drawCard,
+    clear: clearCard
+  };
 };
 
-window.pins = pinsInit();
+window.card = initCard();
+window.pins = initPins();
 window.housesData = generateHousesData(houseDataPatterns, 8);
 
