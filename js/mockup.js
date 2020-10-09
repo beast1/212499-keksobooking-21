@@ -77,31 +77,19 @@ const generateHousesData = (houseRandomData, pinsCount) => {
 
   return pins;
 };
-//
-//
-//   Сделайте так, чтобы одновременно могла быть открыта только одна карточка объявления.
-//
-//   Обратите внимание, что у главной метки .map__pin--main не может быть карточки объявления.
 const initPins = () => {
   const pinsTemplate = document.querySelector(`#pin`);
   const pinsFragment = document.createDocumentFragment();
   const pinsParent = document.querySelector(`.map__pins`);
-  //для меток похожих объявлений должны быть созданы обработчики событий, которые вызывают показ карточки с соответствующими данными.
   const onPinsParentClick = (e) => {
     if (e.target.offsetParent.dataset.idForCard) {
-      console.log(e.target.offsetParent);
-      // Доработайте проект так, чтобы пользователь мог открыть карточку любого доступного объявления;
       window.card.draw(window.housesData[e.target.offsetParent.dataset.idForCard]);
     }
   };
-  // Добавьте поддержку открытия карточки объявления с клавиатуры. Карточка объявления для выбранной метки открывается при нажатии на клавишу Enter.
   const onPinsParentKeydown = (e) => {
-    //todo добавить обработку клавиатуры
-    console.log(e);
-    // if (e.target.offsetParent.dataset.idForCard) {
-    //   console.log(e.target.offsetParent);
-    //   window.card.draw(window.housesData[e.target.offsetParent.dataset.idForCard]);
-    // }
+    if (e.key === `Enter` && e.target.dataset.idForCard) {
+      window.card.draw(window.housesData[e.target.dataset.idForCard]);
+    }
   };
   const drawPins = (pinsStructuredData) => {
     pinsStructuredData.forEach((pinData, i) => {
@@ -186,13 +174,11 @@ const initCard = () => {
     drawCardAvatar(housesData.author.avatar);
 
     filtersContainer.before(cardMarkup);
-    // todo заменить на метод из utils
     cardMarkup.classList.remove(`hidden`);
     cardCloseBtn.addEventListener(`click`, onCardCloseBtnClick);
   };
   const clearCard = () => {
     cardMarkup.classList.add(`hidden`);
-    console.log(filtersContainer);
     cardCloseBtn.removeEventListener(`click`, onCardCloseBtnClick);
   };
   return {
