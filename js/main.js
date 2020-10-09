@@ -1,6 +1,29 @@
 'use strict';
 
 const initPin = () => {
+  const markerOffset = {
+    X: 25,
+    Y: 70
+  };
+  const roomLimits = [
+    {
+      roomsCount: 1,
+      guestOptions: [{value: 1, text: `для 1 гостя`}]
+    },
+    {
+      roomsCount: 2,
+      guestOptions: [{value: 1, text: `для 1 гостя`}, {value: 2, text: `для 2 гостей`}]
+    },
+    {
+      roomsCount: 3,
+      guestOptions: [{value: 1, text: `для 1 гостя`}, {value: 3, text: `для 3 гостей`}, {value: 2, text: `для 2 гостей`}]
+    },
+    {
+      roomsCount: 100,
+      guestOptions: [{value: 1, text: `не для гостей`}]
+    }
+  ];
+
   const mainPin = document.querySelector(`.map__pin--main`);
   const activateForm = (state) => {
     const form = document.querySelector(`.ad-form`);
@@ -33,47 +56,23 @@ const initPin = () => {
       map.classList.remove(`map--faded`);
       activateForm(true);
       initRoomsValidate();
-      mainPin.removeEventListener(`mousedown`, onPinMousedown);
-      mainPin.removeEventListener(`keydown`, onPinKeydown);
     } else {
       activateForm(false);
-      mainPin.addEventListener(`mousedown`, onPinMousedown);
-      mainPin.addEventListener(`keydown`, onPinKeydown);
+      mainPin.addEventListener(`mousedown`, onPinMousedown, {once: true});
+      mainPin.addEventListener(`keydown`, onPinKeydown, {once: true});
     }
   };
 
   const setAddress = () => {
     const addressInput = document.querySelector(`#address`);
     const coordinates = {
-      X: +mainPin.style.left.replace(/[^-0-9]/gim, ``),
-      Y: +mainPin.style.top.replace(/[^-0-9]/gim, ``)
+      X: +mainPin.style.left.replace(/[^-0-9]/gim, ``) + markerOffset.X,
+      Y: +mainPin.style.top.replace(/[^-0-9]/gim, ``) + markerOffset.Y
     };
     addressInput.value = `${coordinates.X}, ${coordinates.Y}`;
   };
 
   const initRoomsValidate = () => {
-    const roomLimits = [
-      {
-        roomsCount: 1,
-        guestOptions: [{value: 1, text: `для 1 гостя`}]
-      },
-      {
-        roomsCount: 2,
-        guestOptions: [{value: 1, text: `для 1 гостя`}, {value: 2, text: `для 2 гостей`}]
-      },
-      {
-        roomsCount: 3,
-        guestOptions: [{value: 1, text: `для 1 гостя`}, {value: 2, text: `для 2 гостей`}, {
-          value: 3,
-          text: `для 3 гостей`
-        }]
-      },
-      {
-        roomsCount: 100,
-        guestOptions: [{value: 1, text: `не для гостей`}]
-      }
-    ];
-
     const roomsSelect = document.querySelector(`#room_number`);
     const capacitySelect = document.querySelector(`#capacity`);
     const capacityOption = document.querySelector(`#capacity option`);
