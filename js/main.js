@@ -132,19 +132,21 @@ window.initPin = () => {
   const initMinPriceValidate = () => {
     const typeSelect = document.querySelector(`#type`);
     const priceInput = document.querySelector(`#price`);
+    let currentMinPrice;
     const typeMinPriceValidate = (e) => {
       validationLimits.type.forEach((type) => {
         if (type.name === e.target.value) {
-          priceInput.attributes.min = type.MIN_PRICE;
-          priceInput.attributes.placeholder = type.MIN_PRICE;
+          currentMinPrice = type.MIN_PRICE;
+          priceInput.attributes.min = currentMinPrice;
+          priceInput.attributes.placeholder = currentMinPrice;
         }
       });
     };
-    const minPriceValidate = (e) => {
+    const minPriceValidate = () => {
       const value = priceInput.value;
 
-      if (value < e.target.attributes.min) {
-        priceInput.setCustomValidity(`Минимальная цена выбранного типа апартаментов ${e.target.attributes.min}`);
+      if (value < currentMinPrice) {
+        priceInput.setCustomValidity(`Минимальная цена выбранного типа апартаментов ${currentMinPrice} руб.`);
       } else {
         priceInput.setCustomValidity(``);
       }
@@ -153,9 +155,10 @@ window.initPin = () => {
     };
     const onTypeSelectInput = (e) => {
       typeMinPriceValidate(e);
+      minPriceValidate();
     };
-    const onPriceInput = (e) => {
-      minPriceValidate(e);
+    const onPriceInput = () => {
+      minPriceValidate();
     };
     typeSelect.addEventListener(`input`, onTypeSelectInput);
     priceInput.addEventListener(`input`, onPriceInput);
