@@ -6,7 +6,7 @@
     Y: 70
   };
   const initControlPin = () => {
-    const mainPin = document.querySelector(`.map__pin--main`);
+    const controlPin = document.querySelector(`.map__pin--main`);
     const activateForm = (state) => {
       const form = document.querySelector(`.ad-form`);
       const formFieldsetArr = form.querySelectorAll(`fieldset`);
@@ -26,7 +26,6 @@
         form.classList.add(`ad-form--disabled`);
       }
     };
-
     const setMapState = (state) => {
       const onPinMousedown = (e) => {
         if (e.button === 0) {
@@ -45,21 +44,57 @@
         window.form.rooms.initValidation();
       } else {
         activateForm(false);
-        mainPin.addEventListener(`mousedown`, onPinMousedown, {once: true});
-        mainPin.addEventListener(`keydown`, onPinKeydown, {once: true});
+        controlPin.addEventListener(`mousedown`, onPinMousedown, {once: true});
+        controlPin.addEventListener(`keydown`, onPinKeydown, {once: true});
       }
     };
-
     const setAddress = () => {
       const addressInput = document.querySelector(`#address`);
       const coordinates = {
-        X: +mainPin.style.left.replace(/[^-0-9]/gim, ``) + markerOffset.X,
-        Y: +mainPin.style.top.replace(/[^-0-9]/gim, ``) + markerOffset.Y
+        X: +controlPin.style.left.replace(/[^-0-9]/gim, ``) + markerOffset.X,
+        Y: +controlPin.style.top.replace(/[^-0-9]/gim, ``) + markerOffset.Y
       };
       addressInput.value = `${coordinates.X}, ${coordinates.Y}`;
     };
+    const initDrag = () => {
+      const onControlPinMousedown = (e) => {
+        e.preventDefault();
+        let startCoords = {
+          x: e.clientX,
+          y: e.clientY
+        };
+
+        const onMouseMove = (moveEvt) => {
+          moveEvt.preventDefault();
+
+          const shift = {
+            x: startCoords.x - moveEvt.clientX,
+            y: startCoords.y - moveEvt.clientY
+          };
+
+          startCoords = {
+            x: moveEvt.clientX,
+            y: moveEvt.clientY
+          };
+
+          controlPin.style.top = (controlPin.offsetTop - shift.y) + `px`;
+          controlPin.style.left = (controlPin.offsetLeft - shift.x) + `px`;
+        };
+        const onMouseUp = (upEvt) => {
+          upEvt.preventDefault();
+          document.removeEventListener(`mousemove`, onMouseMove);
+          document.removeEventListener(`mouseup`, onMouseUp);
+          setAddress();
+        };
+
+        document.addEventListener(`mousemove`, onMouseMove);
+        document.addEventListener(`mouseup`, onMouseUp);
+      };
+      controlPin.addEventListener(`mousedown`, onControlPinMousedown);
+    };
     setAddress();
     setMapState(false);
+    initDrag();
   };
 
   window.controlPin = {
