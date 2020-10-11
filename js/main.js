@@ -1,6 +1,6 @@
 'use strict';
 
 (() => {
-  window.form.initMainPin();
+  window.controlPin.init();
 })();
 
