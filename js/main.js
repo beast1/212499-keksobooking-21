@@ -138,7 +138,6 @@ window.initPin = () => {
         if (type.name === e.target.value) {
           currentMinPrice = type.MIN_PRICE;
           priceInput.attributes.min = currentMinPrice;
-          priceInput.attributes.placeholder = currentMinPrice;
         }
       });
     };
