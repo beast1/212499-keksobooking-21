@@ -13,9 +13,16 @@
     Y: 70
   };
 
-  const mapOverlayY = {
-    START: 130,
-    END: 630
+  const mapOverlayNode = document.querySelector(`.map__overlay`);
+  const mapOverlay = {
+    y: {
+      START: 130,
+      END: 630
+    },
+    x: {
+      START: 0,
+      END: mapOverlayNode.offsetWidth
+    }
   };
 
   const pinTextContent = {
@@ -24,10 +31,9 @@
   };
 
   const generateLocation = () => {
-    const mapOverlay = document.querySelector(`.map__overlay`);
     return {
-      x: window.util.randomInteger(pinOffset.X, mapOverlay.offsetWidth),
-      y: window.util.randomInteger(mapOverlayY.START + pinOffset.Y, mapOverlayY.END)
+      x: window.util.randomInteger(mapOverlay.x.START, mapOverlay.x.END),
+      y: window.util.randomInteger(mapOverlay.y.START + pinOffset.Y, mapOverlay.y.END)
     };
   };
   const generateFeatures = (houseRandomData) => {
@@ -69,6 +75,7 @@
     return pins;
   };
   window.data = {
+    mapOverlay: mapOverlay,
     pinOffset,
     houses: generateHousesData(houseDataPatterns, 8)
   };

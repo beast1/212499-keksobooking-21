@@ -6,8 +6,10 @@
     const pinsFragment = document.createDocumentFragment();
     const pinsParent = document.querySelector(`.map__pins`);
     const onPinsParentClick = (e) => {
-      if (e.target.offsetParent.dataset.idForCard) {
-        window.card.draw(window.data.houses[e.target.offsetParent.dataset.idForCard]);
+      if (e.target.offsetParent) {
+        if (e.target.offsetParent.dataset.idForCard) {
+          window.card.draw(window.data.houses[e.target.offsetParent.dataset.idForCard]);
+        }
       }
     };
     const onPinsParentKeydown = (e) => {

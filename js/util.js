@@ -16,9 +16,18 @@
       window.hideNode(node);
     }
   };
+  const mapOffsetCheck = (number, axis) => {
+    if (number < window.data.mapOverlay[axis].START) {
+      number = window.data.mapOverlay[axis].START;
+    } else if (number > window.data.mapOverlay[axis].END) {
+      number = window.data.mapOverlay[axis].END;
+    }
+    return number;
+  };
   window.util = {
     randomInteger,
     hideNode,
-    drawTextBlock
+    drawTextBlock,
+    mapOffsetCheck
   };
 })();

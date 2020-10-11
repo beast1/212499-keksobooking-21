@@ -66,7 +66,6 @@
 
         const onMouseMove = (moveEvt) => {
           moveEvt.preventDefault();
-
           const shift = {
             x: startCoords.x - moveEvt.clientX,
             y: startCoords.y - moveEvt.clientY
@@ -77,8 +76,8 @@
             y: moveEvt.clientY
           };
 
-          controlPin.style.top = (controlPin.offsetTop - shift.y) + `px`;
-          controlPin.style.left = (controlPin.offsetLeft - shift.x) + `px`;
+          controlPin.style.top = `${window.util.mapOffsetCheck(controlPin.offsetTop - shift.y, `y`)}px`;
+          controlPin.style.left = `${window.util.mapOffsetCheck(controlPin.offsetLeft - shift.x, `x`)}px`;
         };
         const onMouseUp = (upEvt) => {
           upEvt.preventDefault();
