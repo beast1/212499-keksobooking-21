@@ -3,4 +3,3 @@
 (() => {
   window.controlPin.init();
 })();
-
