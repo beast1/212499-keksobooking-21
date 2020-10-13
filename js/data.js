@@ -21,8 +21,8 @@
       END: 630
     },
     x: {
-      START: 0,
-      END: mapOverlayNode.offsetWidth - largestPin.offsetWidth
+      START: 0 - largestPin.offsetWidth / 2,
+      END: mapOverlayNode.offsetWidth - largestPin.offsetWidth / 2
     }
   };
 
