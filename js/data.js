@@ -14,6 +14,7 @@
   };
 
   const mapOverlayNode = document.querySelector(`.map__overlay`);
+  const largestPin = document.querySelector(`.map__pin--main`);
   const mapOverlay = {
     y: {
       START: 130,
@@ -21,7 +22,7 @@
     },
     x: {
       START: 0,
-      END: mapOverlayNode.offsetWidth
+      END: mapOverlayNode.offsetWidth - largestPin.offsetWidth
     }
   };
 
