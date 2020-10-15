@@ -8,6 +8,9 @@
   const hideNode = (node) => {
     node.style.display = `none`;
   };
+  const showNode = (node) => {
+    node.style.display = `block`;
+  };
   const drawTextBlock = (className, text, parent = document) => {
     const node = parent.querySelector(className);
     if (node && text) {
@@ -24,10 +27,20 @@
     }
     return number;
   };
+  const showUserError = (errMessage) => {
+    const errorTemplate = document.querySelector(`#error`);
+    const errorMarkup = errorTemplate.content.querySelector(`.error`).cloneNode(true);
+    const errorAction = errorMarkup.querySelector(`.error__button`);
+    drawTextBlock(`.error__message`, errMessage, errorMarkup);
+    document.querySelector(`body`).appendChild(errorMarkup);
+    errorAction.addEventListener(`click`, () => location.reload());
+  };
   window.util = {
     randomInteger,
     hideNode,
+    showNode,
     drawTextBlock,
-    mapOffsetCheck
+    mapOffsetCheck,
+    showUserError
   };
 })();

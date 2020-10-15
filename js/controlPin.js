@@ -5,8 +5,14 @@
     X: 25,
     Y: 70
   };
+  const controlPin = document.querySelector(`.map__pin--main`);
+  const setDisabledState = () => {
+    window.util.hideNode(controlPin);
+  };
+  const setActiveState = () => {
+    window.util.showNode(controlPin);
+  };
   const initControlPin = () => {
-    const controlPin = document.querySelector(`.map__pin--main`);
     const activateForm = (state) => {
       const form = document.querySelector(`.ad-form`);
       const formFieldsetArr = form.querySelectorAll(`fieldset`);
@@ -91,12 +97,14 @@
       };
       controlPin.addEventListener(`mousedown`, onControlPinMousedown);
     };
+    setDisabledState();
     setAddress();
     setMapState(false);
     initDrag();
   };
 
   window.controlPin = {
-    init: initControlPin
+    init: initControlPin,
+    setActiveState
   };
 })();

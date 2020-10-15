@@ -75,9 +75,21 @@
 
     return pins;
   };
+
+  const onSuccess = (response) => {
+    window.data.houses = response;
+    window.controlPin.setActiveState();
+  };
+  const onError = (errorMessage) => {
+    window.util.showUserError(errorMessage);
+  };
+  const loadHousesData = () => {
+    window.load(`https://21.javascript.pages.academy/keksobooking/data`, onSuccess, onError);
+  };
+  loadHousesData();
   window.data = {
-    mapOverlay: mapOverlay,
+    mapOverlay,
     pinOffset,
-    houses: generateHousesData(houseDataPatterns, 8)
+    mockHouses: generateHousesData(houseDataPatterns, 8)
   };
 })();
