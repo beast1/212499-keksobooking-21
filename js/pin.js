@@ -2,9 +2,11 @@
 
 (() => {
   const initPins = () => {
+    const map = document.querySelector(`#map`);
     const pinsTemplate = document.querySelector(`#pin`);
     const pinsFragment = document.createDocumentFragment();
     const pinsParent = document.querySelector(`.map__pins`);
+    const pins = [];
     const onPinsParentClick = (e) => {
       if (e.target.offsetParent) {
         if (e.target.offsetParent.dataset.idForCard) {
@@ -25,13 +27,18 @@
         pinMarkup.attributes.alt = pinData.offer.title;
         pinMarkup.dataset.idForCard = i;
         pinsFragment.appendChild(pinMarkup);
+        pins.push(pinMarkup);
       });
       pinsParent.appendChild(pinsFragment);
       pinsParent.addEventListener(`click`, onPinsParentClick);
       pinsParent.addEventListener(`keydown`, onPinsParentKeydown);
     };
     const clearPins = () => {
-      pinsParent.innerHTML = ``;
+      map.classList.add(`map--faded`);
+      pins.forEach((pin) => {
+        pin.remove();
+      });
+      window.controlPin.setMapState(false);
       pinsParent.removeEventListener(`click`, onPinsParentClick);
       pinsParent.removeEventListener(`keydown`, onPinsParentKeydown);
     };

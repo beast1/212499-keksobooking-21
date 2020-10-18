@@ -27,13 +27,23 @@
     }
     return number;
   };
-  const showUserError = (errMessage) => {
-    const errorTemplate = document.querySelector(`#error`);
-    const errorMarkup = errorTemplate.content.querySelector(`.error`).cloneNode(true);
-    const errorAction = errorMarkup.querySelector(`.error__button`);
-    drawTextBlock(`.error__message`, errMessage, errorMarkup);
-    document.querySelector(`body`).appendChild(errorMarkup);
-    errorAction.addEventListener(`click`, () => location.reload());
+  const showUserMessage = (blockName, message) => {
+    const template = document.querySelector(`#${blockName}`);
+    const markup = template.content.querySelector(`.${blockName}`).cloneNode(true);
+    const action = markup.querySelector(`.${blockName}__button`);
+    drawTextBlock(`.${blockName}__message`, message, markup);
+    document.querySelector(`body`).appendChild(markup);
+    if (action) {
+      action.addEventListener(`click`, () => location.reload());
+    }
+    if (markup) {
+      markup.addEventListener(`click`, () => hideNode(markup));
+      document.addEventListener(`keydown`, (e) => {
+        if (e.key === `Escape`) {
+          hideNode(markup);
+        }
+      });
+    }
   };
   window.util = {
     randomInteger,
@@ -41,6 +51,6 @@
     showNode,
     drawTextBlock,
     mapOffsetCheck,
-    showUserError
+    showUserMessage
   };
 })();

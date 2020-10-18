@@ -6,62 +6,71 @@
     Y: 70
   };
   const controlPin = document.querySelector(`.map__pin--main`);
+  const controlPinInitPosition = {
+    LEFT: controlPin.style.left,
+    TOP: controlPin.style.top
+  };
   const setDisabledState = () => {
     window.util.hideNode(controlPin);
   };
   const setActiveState = () => {
     window.util.showNode(controlPin);
   };
+  const activateForm = (state) => {
+    const form = document.querySelector(`.ad-form`);
+    const formFieldsetArr = form.querySelectorAll(`fieldset`);
+
+    formFieldsetArr.forEach((formFieldset) => {
+      formFieldset.disabled = !state;
+    });
+
+    if (state) {
+      form.classList.remove(`ad-form--disabled`);
+      window.pin.draw(window.data.houses);
+      window.form.rooms.initValidation();
+      window.form.minPrice.initValidation();
+      window.form.title.initValidation();
+      window.form.checkin.initValidation();
+      window.form.initSubmit();
+    } else {
+      form.classList.add(`ad-form--disabled`);
+      form.reset();
+    }
+  };
+  const setAddress = () => {
+    const addressInput = document.querySelector(`#address`);
+    const coordinates = {
+      X: +controlPin.style.left.replace(/[^-0-9]/gim, ``) + markerOffset.X,
+      Y: +controlPin.style.top.replace(/[^-0-9]/gim, ``) + markerOffset.Y
+    };
+    addressInput.value = `${coordinates.X}, ${coordinates.Y}`;
+  };
+  const setMapState = (state) => {
+    const onPinMousedown = (e) => {
+      if (e.button === 0) {
+        setMapState(true);
+      }
+    };
+    const onPinKeydown = (e) => {
+      if (e.key === `Enter`) {
+        setMapState(true);
+      }
+    };
+    if (state) {
+      const map = document.querySelector(`.map`);
+      map.classList.remove(`map--faded`);
+      activateForm(true);
+      window.form.rooms.initValidation();
+    } else {
+      activateForm(false);
+      controlPin.addEventListener(`mousedown`, onPinMousedown, {once: true});
+      controlPin.addEventListener(`keydown`, onPinKeydown, {once: true});
+      controlPin.style.left = controlPinInitPosition.LEFT;
+      controlPin.style.top = controlPinInitPosition.TOP;
+      setAddress();
+    }
+  };
   const initControlPin = () => {
-    const activateForm = (state) => {
-      const form = document.querySelector(`.ad-form`);
-      const formFieldsetArr = form.querySelectorAll(`fieldset`);
-
-      formFieldsetArr.forEach((formFieldset) => {
-        formFieldset.disabled = !state;
-      });
-
-      if (state) {
-        form.classList.remove(`ad-form--disabled`);
-        window.pin.draw(window.data.houses);
-        window.form.rooms.initValidation();
-        window.form.minPrice.initValidation();
-        window.form.title.initValidation();
-        window.form.checkin.initValidation();
-      } else {
-        form.classList.add(`ad-form--disabled`);
-      }
-    };
-    const setMapState = (state) => {
-      const onPinMousedown = (e) => {
-        if (e.button === 0) {
-          setMapState(true);
-        }
-      };
-      const onPinKeydown = (e) => {
-        if (e.key === `Enter`) {
-          setMapState(true);
-        }
-      };
-      if (state) {
-        const map = document.querySelector(`.map`);
-        map.classList.remove(`map--faded`);
-        activateForm(true);
-        window.form.rooms.initValidation();
-      } else {
-        activateForm(false);
-        controlPin.addEventListener(`mousedown`, onPinMousedown, {once: true});
-        controlPin.addEventListener(`keydown`, onPinKeydown, {once: true});
-      }
-    };
-    const setAddress = () => {
-      const addressInput = document.querySelector(`#address`);
-      const coordinates = {
-        X: +controlPin.style.left.replace(/[^-0-9]/gim, ``) + markerOffset.X,
-        Y: +controlPin.style.top.replace(/[^-0-9]/gim, ``) + markerOffset.Y
-      };
-      addressInput.value = `${coordinates.X}, ${coordinates.Y}`;
-    };
     const initDrag = () => {
       const onControlPinMousedown = (e) => {
         e.preventDefault();
@@ -98,13 +107,15 @@
       controlPin.addEventListener(`mousedown`, onControlPinMousedown);
     };
     setDisabledState();
-    setAddress();
     setMapState(false);
+    setAddress();
     initDrag();
   };
 
   window.controlPin = {
     init: initControlPin,
-    setActiveState
+    setActiveState,
+    setMapState,
+    setAddress
   };
 })();

@@ -1,6 +1,7 @@
 'use strict';
 
 (() => {
+  const formNode = document.querySelector(`#ad-form`);
   const validationLimits = {
     MIN_NAME_LENGTH: 30,
     MAX_NAME_LENGTH: 100,
@@ -29,7 +30,6 @@
       }
     ]
   };
-
   const initRoomsValidate = () => {
     const roomsSelect = document.querySelector(`#room_number`);
     const capacitySelect = document.querySelector(`#capacity`);
@@ -55,8 +55,8 @@
     };
 
     roomsSelect.addEventListener(`input`, onRoomsSelectInput);
+    roomsValidate();
   };
-
   const initCheckinValidate = () => {
     const checkinInput = document.querySelector(`#timein`);
     const checkoutInput = document.querySelector(`#timeout`);
@@ -72,7 +72,6 @@
     checkinInput.addEventListener(`input`, onCheckinInput);
     checkoutInput.addEventListener(`input`, updCheckinValue);
   };
-
   const initMinPriceValidate = () => {
     const typeSelect = document.querySelector(`#type`);
     const priceInput = document.querySelector(`#price`);
@@ -106,7 +105,6 @@
     typeSelect.addEventListener(`input`, onTypeSelectInput);
     priceInput.addEventListener(`input`, onPriceInput);
   };
-
   const initTitleValidate = () => {
     const titleInput = document.querySelector(`#title`);
     const onTitleInput = () => {
@@ -124,7 +122,30 @@
     };
     titleInput.addEventListener(`input`, onTitleInput);
   };
-
+  const initSubmit = () => {
+    const onSubmit = (e) => {
+      e.preventDefault();
+      window.upload(new FormData(formNode), (response) => {
+        window.pin.clear();
+        window.util.showUserMessage(`success`, response);
+      });
+    };
+    formNode.addEventListener(`submit`, onSubmit);
+  };
+  const initResetBtn = () => {
+    const resetBtn = document.querySelector(`.ad-form__reset`);
+    const resetForm = () => {
+      formNode.reset();
+      window.util.showUserMessage(`success`, `Форма очищена`);
+    };
+    const onResetBtnClick = (e) => {
+      e.preventDefault();
+      resetForm();
+      window.controlPin.setAddress();
+    };
+    resetBtn.addEventListener(`click`, onResetBtnClick);
+  };
+  initResetBtn();
   window.form = {
     rooms: {
       initValidation: initRoomsValidate
@@ -137,6 +158,7 @@
     },
     title: {
       initValidation: initTitleValidate
-    }
+    },
+    initSubmit
   };
 })();

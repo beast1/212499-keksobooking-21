@@ -81,7 +81,7 @@
     window.controlPin.setActiveState();
   };
   const onError = (errorMessage) => {
-    window.util.showUserError(errorMessage);
+    window.util.showUserMessage(`error`, errorMessage);
   };
   const loadHousesData = () => {
     window.load(`https://21.javascript.pages.academy/keksobooking/data`, onSuccess, onError);
