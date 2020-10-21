@@ -31,6 +31,12 @@
     DESCRIPTION: `Теплое место, последнее пристанище расплавленного ума`
   };
 
+  const messages = {
+    filter: {
+      noResult: `Объявления которые соответствуют заданным фильтрам не были найдены`
+    }
+  };
+
   const generateLocation = () => {
     return {
       x: window.util.randomInteger(mapOverlay.x.START, mapOverlay.x.END),
@@ -90,6 +96,7 @@
   window.data = {
     mapOverlay,
     pinOffset,
-    mockHouses: generateHousesData(houseDataPatterns, 8)
+    mockHouses: generateHousesData(houseDataPatterns, 8),
+    messages
   };
 })();

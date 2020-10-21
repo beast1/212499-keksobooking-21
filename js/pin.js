@@ -34,17 +34,21 @@
       pinsParent.addEventListener(`keydown`, onPinsParentKeydown);
     };
     const clearPins = () => {
-      map.classList.add(`map--faded`);
       pins.forEach((pin) => {
         pin.remove();
       });
+    };
+    const closePins = () => {
+      map.classList.add(`map--faded`);
+      clearPins();
       window.controlPin.setMapState(false);
       pinsParent.removeEventListener(`click`, onPinsParentClick);
       pinsParent.removeEventListener(`keydown`, onPinsParentKeydown);
     };
     return {
       draw: drawPins,
-      clear: clearPins
+      clear: clearPins,
+      close: closePins
     };
   };
 

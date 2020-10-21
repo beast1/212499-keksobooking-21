@@ -126,7 +126,7 @@
     const onSubmit = (e) => {
       e.preventDefault();
       window.upload(new FormData(formNode), (response) => {
-        window.pin.clear();
+        window.pin.close();
         window.util.showUserMessage(`success`, response);
       });
     };

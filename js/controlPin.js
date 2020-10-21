@@ -26,7 +26,8 @@
 
     if (state) {
       form.classList.remove(`ad-form--disabled`);
-      window.pin.draw(window.data.houses);
+      // window.pin.draw(window.data.houses);
+      window.filter.submit();
       window.form.rooms.initValidation();
       window.form.minPrice.initValidation();
       window.form.title.initValidation();
