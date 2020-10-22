@@ -45,12 +45,27 @@
       });
     }
   };
+  const contains = (where, what) => {
+    for (let i = 0; i < what.length; i++) {
+      if (where.indexOf(what[i]) === -1) {
+        return false;
+      }
+    }
+    return true;
+  };
+  const findAndRemove = (arr, targetElement) => {
+    arr.splice(arr.findIndex((item) => {
+      return item === targetElement;
+    }), 1);
+  };
   window.util = {
     randomInteger,
     hideNode,
     showNode,
     drawTextBlock,
     mapOffsetCheck,
-    showUserMessage
+    showUserMessage,
+    contains,
+    findAndRemove
   };
 })();
