@@ -22,12 +22,9 @@
   const featuresCheckboxesFieldset = form.querySelector(`#housing-features`);
   const featuresCheckboxes = featuresCheckboxesFieldset.querySelectorAll(`input[name="features"]`);
   const submitFilter = () => {
-    console.log(window.data.houses);
-    //фильтруем по типу
     let filteredHouses = window.data.houses.filter((house) => {
       return filterSettings.type === `any` || house.offer.type === filterSettings.type;
     });
-    //фильтруем по цене
     const convertPrice = (priceNumeric) => {
       let priceType;
       if (priceNumeric < priceTypes.LOW) {
@@ -43,27 +40,22 @@
       filteredHouses = filteredHouses.filter((house) => {
         return convertPrice(+house.offer.price) === filterSettings.price;
       });
-      console.log(filteredHouses);
     }
-    //фильтруем по кол-ву комнат
     if (filterSettings.rooms !== `any`) {
       filteredHouses = filteredHouses.filter((house) => {
         return +house.offer.rooms === +filterSettings.rooms;
       });
     }
-    //фильтруем по кол-ву гостей
     if (filterSettings.guests !== `any`) {
       filteredHouses = filteredHouses.filter((house) => {
         return +house.offer.guests === +filterSettings.guests;
       });
     }
-    //фильтруем по наличию фич
     if (filterSettings.features !== []) {
       filteredHouses = filteredHouses.filter((house) => {
         return window.util.contains(house.offer.features, filterSettings.features);
       });
     }
-    //обрезаем лишнее если есть
     if (filteredHouses.length === 0) {
       window.util.showUserMessage(`success`, window.data.messages.filter.noResult);
     } else {
@@ -103,12 +95,12 @@
     }
     submitFilter();
   };
-  typeSelect.addEventListener(`input`, onTypeSelectInput);
-  priceSelect.addEventListener(`input`, onPriceSelectInput);
-  roomsSelect.addEventListener(`input`, onRoomsSelectInput);
-  guestsSelect.addEventListener(`input`, onGuestsSelectInput);
+  typeSelect.addEventListener(`input`, window.debounce(onTypeSelectInput));
+  priceSelect.addEventListener(`input`, window.debounce(onPriceSelectInput));
+  roomsSelect.addEventListener(`input`, window.debounce(onRoomsSelectInput));
+  guestsSelect.addEventListener(`input`, window.debounce(onGuestsSelectInput));
   featuresCheckboxes.forEach((checkbox) => {
-    checkbox.addEventListener(`input`, onFeatureCheckboxInput);
+    checkbox.addEventListener(`input`, window.debounce(onFeatureCheckboxInput));
   });
   window.filter = {
     submit: submitFilter
