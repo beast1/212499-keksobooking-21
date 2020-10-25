@@ -15,27 +15,50 @@
     features: []
   };
   const form = document.querySelector(`#pins-filter`);
-  const typeSelect = form.querySelector(`#housing-type`);
-  const priceSelect = form.querySelector(`#housing-price`);
-  const roomsSelect = form.querySelector(`#housing-rooms`);
-  const guestsSelect = form.querySelector(`#housing-guests`);
-  const featuresCheckboxesFieldset = form.querySelector(`#housing-features`);
-  const featuresCheckboxes = featuresCheckboxesFieldset.querySelectorAll(`input[name="features"]`);
-  const submitFilter = () => {
-    let filteredHouses = window.data.houses.filter((house) => {
-      return filterSettings.type === `any` || house.offer.type === filterSettings.type;
-    });
-    const convertPrice = (priceNumeric) => {
-      let priceType;
-      if (priceNumeric < priceTypes.LOW) {
-        priceType = `low`;
-      } else if (priceTypes.LOW <= priceNumeric && priceNumeric < priceTypes.MIDDLE) {
-        priceType = `middle`;
-      } else if (priceTypes.MIDDLE <= priceNumeric) {
-        priceType = `high`;
-      }
-      return priceType;
+  const initSelectFilter = (name) => {
+    const select = form.querySelector(`#housing-${name}`);
+    const onTypeSelectInput = (e) => {
+      e.preventDefault();
+      filterSettings[name] = select.value;
+      submitFilter();
     };
+    select.addEventListener(`input`, window.debounce(onTypeSelectInput));
+  };
+  const initCheckboxFilter = () => {
+    const featuresCheckboxesFieldset = form.querySelector(`#housing-features`);
+    const featuresCheckboxes = featuresCheckboxesFieldset.querySelectorAll(`input[name="features"]`);
+    const onFeatureCheckboxInput = (e) => {
+      e.preventDefault();
+      const featureName = e.target.id.replace(/filter-/gi, ``);
+      if (e.target.checked === true) {
+        filterSettings.features.push(featureName);
+      } else {
+        window.util.findAndRemove(filterSettings.features, featureName);
+      }
+      submitFilter();
+    };
+    featuresCheckboxes.forEach((checkbox) => {
+      checkbox.addEventListener(`input`, window.debounce(onFeatureCheckboxInput));
+    });
+  };
+  const convertPrice = (priceNumeric) => {
+    let priceType;
+    if (priceNumeric < priceTypes.LOW) {
+      priceType = `low`;
+    } else if (priceTypes.LOW <= priceNumeric && priceNumeric < priceTypes.MIDDLE) {
+      priceType = `middle`;
+    } else if (priceTypes.MIDDLE <= priceNumeric) {
+      priceType = `high`;
+    }
+    return priceType;
+  };
+  const submitFilter = () => {
+    let filteredHouses = window.data.houses;
+    if (filterSettings.type !== `any`) {
+      filteredHouses = filteredHouses.filter((house) => {
+        return house.offer.type === filterSettings.type;
+      });
+    }
     if (filterSettings.price !== `any`) {
       filteredHouses = filteredHouses.filter((house) => {
         return convertPrice(+house.offer.price) === filterSettings.price;
@@ -65,43 +88,11 @@
       window.pin.draw(filteredHouses);
     }
   };
-  const onTypeSelectInput = (e) => {
-    e.preventDefault();
-    filterSettings.type = typeSelect.value;
-    submitFilter();
-  };
-  const onPriceSelectInput = (e) => {
-    e.preventDefault();
-    filterSettings.price = priceSelect.value;
-    submitFilter();
-  };
-  const onRoomsSelectInput = (e) => {
-    e.preventDefault();
-    filterSettings.rooms = roomsSelect.value;
-    submitFilter();
-  };
-  const onGuestsSelectInput = (e) => {
-    e.preventDefault();
-    filterSettings.guests = guestsSelect.value;
-    submitFilter();
-  };
-  const onFeatureCheckboxInput = (e) => {
-    e.preventDefault();
-    const featureName = e.target.id.replace(/filter-/gi, ``);
-    if (e.target.checked === true) {
-      filterSettings.features.push(featureName);
-    } else {
-      window.util.findAndRemove(filterSettings.features, featureName);
-    }
-    submitFilter();
-  };
-  typeSelect.addEventListener(`input`, window.debounce(onTypeSelectInput));
-  priceSelect.addEventListener(`input`, window.debounce(onPriceSelectInput));
-  roomsSelect.addEventListener(`input`, window.debounce(onRoomsSelectInput));
-  guestsSelect.addEventListener(`input`, window.debounce(onGuestsSelectInput));
-  featuresCheckboxes.forEach((checkbox) => {
-    checkbox.addEventListener(`input`, window.debounce(onFeatureCheckboxInput));
-  });
+  initSelectFilter(`type`);
+  initSelectFilter(`price`);
+  initSelectFilter(`rooms`);
+  initSelectFilter(`guests`);
+  initCheckboxFilter();
   window.filter = {
     submit: submitFilter
   };
