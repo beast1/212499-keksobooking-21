@@ -2,9 +2,9 @@
 
 (() => {
   const priceTypes = {
-    low: 10000,
-    middle: 50000,
-    high: 100000
+    LOW: 10000,
+    MIDDLE: 50000,
+    HIGH: 100000
   };
   const filterSettings = {
     MAX_COUNT: 5,
@@ -28,6 +28,23 @@
       return filterSettings.type === `any` || house.offer.type === filterSettings.type;
     });
     //фильтруем по цене
+    const convertPrice = (priceNumeric) => {
+      let priceType;
+      if (priceNumeric < priceTypes.LOW) {
+        priceType = `low`;
+      } else if (priceTypes.LOW <= priceNumeric && priceNumeric < priceTypes.MIDDLE) {
+        priceType = `middle`;
+      } else if (priceTypes.MIDDLE <= priceNumeric) {
+        priceType = `high`;
+      }
+      return priceType;
+    };
+    if (filterSettings.price !== `any`) {
+      filteredHouses = filteredHouses.filter((house) => {
+        return convertPrice(+house.offer.price) === filterSettings.price;
+      });
+      console.log(filteredHouses);
+    }
     //фильтруем по кол-ву комнат
     if (filterSettings.rooms !== `any`) {
       filteredHouses = filteredHouses.filter((house) => {
