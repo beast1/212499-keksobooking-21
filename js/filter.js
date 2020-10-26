@@ -7,7 +7,7 @@
     HIGH: 100000
   };
   const filterSettings = {
-    MAX_COUNT: 5,
+    maxCount: 5,
     type: `any`,
     price: `any`,
     rooms: `any`,
@@ -82,7 +82,7 @@
     if (filteredHouses.length === 0) {
       window.util.showUserMessage(`success`, window.data.messages.filter.noResult);
     } else {
-      filteredHouses = filteredHouses.slice(0, filterSettings.MAX_COUNT);
+      filteredHouses = filteredHouses.slice(0, filterSettings.maxCount);
       window.card.clear();
       window.pin.clear();
       window.pin.draw(filteredHouses);
