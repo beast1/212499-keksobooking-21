@@ -53,10 +53,17 @@
     }
     return true;
   };
-  const findAndRemove = (arr, targetElement) => {
+  const findAndRemove = (arr, targetItem) => {
     arr.splice(arr.findIndex((item) => {
-      return item === targetElement;
+      return item === targetItem;
     }), 1);
+  };
+  const changeDisabledAttr = (node, state) => {
+    if (state) {
+      node.setAttribute(`disabled`, `true`);
+    } else {
+      node.removeAttribute(`disabled`);
+    }
   };
   window.util = {
     randomInteger,
@@ -66,6 +73,7 @@
     mapOffsetCheck,
     showUserMessage,
     contains,
-    findAndRemove
+    findAndRemove,
+    changeDisabledAttr
   };
 })();

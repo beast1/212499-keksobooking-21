@@ -21,7 +21,7 @@
     const filters = filterForm.querySelectorAll(`select, input`);
 
     filters.forEach((filter) => {
-      filter.disabled = !state;
+      window.util.changeDisabledAttr(filter, !state);
     });
   };
   const activateOrderForm = (state) => {
@@ -29,7 +29,7 @@
     const formFieldsetArr = form.querySelectorAll(`fieldset`);
 
     formFieldsetArr.forEach((formFieldset) => {
-      formFieldset.disabled = !state;
+      window.util.changeDisabledAttr(formFieldset, !state);
     });
 
     if (state) {
