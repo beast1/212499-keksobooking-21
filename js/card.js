@@ -50,8 +50,19 @@
         window.util.hideNode(avatar);
       }
     };
-    const onCardCloseBtnClick = () => {
+    const closeCard = () => {
+      window.pin.removeActiveStyles();
       window.card.clear();
+    };
+    const onCardCloseBtnClick = (e) => {
+      e.preventDefault();
+      closeCard();
+    };
+    const onDocumentKeydown = (e) => {
+      e.preventDefault();
+      if (e.key === `Escape`) {
+        closeCard();
+      }
     };
     const drawCard = (housesData) => {
       window.util.drawTextBlock(`.popup__title`, housesData.offer.title, cardMarkup);
@@ -68,10 +79,12 @@
       filtersContainer.before(cardMarkup);
       cardMarkup.classList.remove(`hidden`);
       cardCloseBtn.addEventListener(`click`, onCardCloseBtnClick);
+      document.addEventListener(`keydown`, onDocumentKeydown);
     };
     const clearCard = () => {
       cardMarkup.classList.add(`hidden`);
       cardCloseBtn.removeEventListener(`click`, onCardCloseBtnClick);
+      document.removeEventListener(`click`, onDocumentKeydown);
     };
     return {
       draw: drawCard,

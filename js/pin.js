@@ -7,25 +7,13 @@
     const pinsFragment = document.createDocumentFragment();
     const pinsParent = document.querySelector(`.map__pins`);
     const pins = [];
-    const onPinsParentClick = (e) => {
-      if (e.target.offsetParent) {
-        if (e.target.offsetParent.dataset.idForCard) {
-          window.card.draw(window.data.houses[e.target.offsetParent.dataset.idForCard]);
-        }
-      }
-    };
-    const onPinsParentKeydown = (e) => {
-      if (e.key === `Enter` && e.target.dataset.idForCard) {
-        window.card.draw(window.data.houses[e.target.dataset.idForCard]);
-      }
-    };
     const drawPins = (pinsStructuredData) => {
-      pinsStructuredData.forEach((pinData, i) => {
+      pinsStructuredData.forEach((pinData) => {
         const pinMarkup = pinsTemplate.content.querySelector(`.map__pin`).cloneNode(true);
         pinMarkup.style = `left: ${pinData.location.x - window.data.pinOffset.X}px; top: ${pinData.location.y - window.data.pinOffset.Y}px`;
         pinMarkup.attributes.src = pinData.author.avatar;
         pinMarkup.attributes.alt = pinData.offer.title;
-        pinMarkup.dataset.idForCard = i;
+        pinMarkup.dataset.frontId = pinData.frontId;
         pinsFragment.appendChild(pinMarkup);
         pins.push(pinMarkup);
       });
@@ -45,10 +33,32 @@
       pinsParent.removeEventListener(`click`, onPinsParentClick);
       pinsParent.removeEventListener(`keydown`, onPinsParentKeydown);
     };
+    const removeActiveStyles = () => {
+      const showedPins = pinsParent.querySelectorAll(`.map__pin`);
+      showedPins.forEach((pin) => {
+        pin.classList.remove(`map__pin--active`);
+      });
+    };
+    const onPinsParentClick = (e) => {
+      const targetPin = e.target.offsetParent;
+      if (targetPin) {
+        if (targetPin.dataset.frontId) {
+          removeActiveStyles();
+          targetPin.classList.add(`map__pin--active`);
+          window.card.draw(window.data.houses[e.target.offsetParent.dataset.frontId]);
+        }
+      }
+    };
+    const onPinsParentKeydown = (e) => {
+      if (e.key === `Enter` && e.target.dataset.frontId) {
+        window.card.draw(window.data.houses[e.target.dataset.frontId]);
+      }
+    };
     return {
       draw: drawPins,
       clear: clearPins,
-      close: closePins
+      close: closePins,
+      removeActiveStyles
     };
   };
 

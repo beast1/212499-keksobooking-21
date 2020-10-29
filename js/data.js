@@ -81,9 +81,15 @@
 
     return pins;
   };
-
+  const addFrontId = (houses) => {
+    houses.forEach((house, i) => {
+      house.frontId = i;
+    });
+    return houses;
+  };
+  const validateHousesResponse = (response) => response.filter((item) => item.offer);
   const onSuccess = (response) => {
-    window.data.houses = response;
+    window.data.houses = validateHousesResponse(addFrontId(response));
     window.controlPin.setActiveState();
   };
   const onError = (errorMessage) => {
