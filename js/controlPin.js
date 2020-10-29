@@ -16,7 +16,15 @@
   const setActiveState = () => {
     window.util.showNode(controlPin);
   };
-  const activateForm = (state) => {
+  const activateFiltersForm = (state) => {
+    const filterForm = document.querySelector(`.map__filters`);
+    const filters = filterForm.querySelectorAll(`select, input`);
+
+    filters.forEach((filter) => {
+      filter.disabled = !state;
+    });
+  };
+  const activateOrderForm = (state) => {
     const form = document.querySelector(`.ad-form`);
     const formFieldsetArr = form.querySelectorAll(`fieldset`);
 
@@ -59,10 +67,12 @@
     if (state) {
       const map = document.querySelector(`.map`);
       map.classList.remove(`map--faded`);
-      activateForm(true);
+      activateOrderForm(true);
+      activateFiltersForm(true);
       window.form.rooms.initValidation();
     } else {
-      activateForm(false);
+      activateOrderForm(false);
+      activateFiltersForm(false);
       controlPin.addEventListener(`mousedown`, onPinMousedown, {once: true});
       controlPin.addEventListener(`keydown`, onPinKeydown, {once: true});
       controlPin.style.left = controlPinInitPosition.LEFT;
@@ -72,8 +82,7 @@
   };
   const initControlPin = () => {
     const initDrag = () => {
-      const onControlPinMousedown = (e) => {
-        e.preventDefault();
+      const moveControlPin = (e) => {
         let startCoords = {
           x: e.clientX,
           y: e.clientY
@@ -103,6 +112,12 @@
 
         document.addEventListener(`mousemove`, onMouseMove);
         document.addEventListener(`mouseup`, onMouseUp);
+      };
+      const onControlPinMousedown = (e) => {
+        e.preventDefault();
+        if (e.button === 0) {
+          moveControlPin(e);
+        }
       };
       controlPin.addEventListener(`mousedown`, onControlPinMousedown);
     };

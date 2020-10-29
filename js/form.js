@@ -81,6 +81,7 @@
         if (type.name === e.target.value) {
           currentMinPrice = type.MIN_PRICE;
           priceInput.attributes.min = currentMinPrice;
+          priceInput.placeholder = currentMinPrice;
         }
       });
     };
@@ -127,6 +128,8 @@
       e.preventDefault();
       window.upload(new FormData(formNode), (response) => {
         window.pin.close();
+        window.card.clear();
+        window.filter.reset();
         window.util.showUserMessage(`success`, response);
       });
     };
@@ -136,11 +139,14 @@
     const resetBtn = document.querySelector(`.ad-form__reset`);
     const resetForm = () => {
       formNode.reset();
-      window.util.showUserMessage(`success`, `Форма очищена`);
+      // window.util.showUserMessage(`success`, `Форма очищена`);
     };
     const onResetBtnClick = (e) => {
       e.preventDefault();
       resetForm();
+      window.pin.close();
+      window.filter.reset();
+      window.card.clear();
       window.controlPin.setAddress();
     };
     resetBtn.addEventListener(`click`, onResetBtnClick);

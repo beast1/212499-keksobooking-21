@@ -6,7 +6,7 @@
     MIDDLE: 50000,
     HIGH: 100000
   };
-  const filterSettings = {
+  const initialFilterSettings = {
     maxCount: 5,
     type: `any`,
     price: `any`,
@@ -14,6 +14,7 @@
     guests: `any`,
     features: []
   };
+  let filterSettings = Object.assign({}, initialFilterSettings);
   const form = document.querySelector(`#pins-filter`);
   const initSelectFilter = (name) => {
     const select = form.querySelector(`#housing-${name}`);
@@ -88,12 +89,17 @@
       window.pin.draw(filteredHouses);
     }
   };
+  const resetFilters = () => {
+    form.reset();
+    filterSettings = Object.assign({}, initialFilterSettings);
+  };
   initSelectFilter(`type`);
   initSelectFilter(`price`);
   initSelectFilter(`rooms`);
   initSelectFilter(`guests`);
   initCheckboxFilter();
   window.filter = {
-    submit: submitFilter
+    submit: submitFilter,
+    reset: resetFilters
   };
 })();
