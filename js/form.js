@@ -156,6 +156,9 @@ const initResetBtn = () => {
   };
   resetBtn.addEventListener(`click`, onResetBtnClick);
 };
+window.imgInput.init(`.ad-form__field input`, `.ad-form-header__preview img`);
+// todo внутри нет тега картинки, переписать модуль imgInput так чтобы он его сам создавал
+// window.imgInput.init(`.ad-form__upload input`, `.ad-form__photo img`);
 initResetBtn();
 window.form = {
   rooms: {
