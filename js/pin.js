@@ -10,6 +10,8 @@
     const drawPins = (pinsStructuredData) => {
       pinsStructuredData.forEach((pinData) => {
         const pinMarkup = pinsTemplate.content.querySelector(`.map__pin`).cloneNode(true);
+        const pinAvatar = pinMarkup.querySelector(`img`);
+        pinAvatar.src = pinData.author.avatar;
         pinMarkup.style = `left: ${pinData.location.x - window.data.pinOffset.X}px; top: ${pinData.location.y - window.data.pinOffset.Y}px`;
         pinMarkup.attributes.src = pinData.author.avatar;
         pinMarkup.attributes.alt = pinData.offer.title;
@@ -39,19 +41,19 @@
         pin.classList.remove(`map__pin--active`);
       });
     };
-    const onPinsParentClick = (e) => {
-      const targetPin = e.target.offsetParent;
+    const onPinsParentClick = (event) => {
+      const targetPin = event.target.offsetParent;
       if (targetPin) {
         if (targetPin.dataset.frontId) {
           removeActiveStyles();
           targetPin.classList.add(`map__pin--active`);
-          window.card.draw(window.data.houses[e.target.offsetParent.dataset.frontId]);
+          window.card.draw(window.data.houses[event.target.offsetParent.dataset.frontId]);
         }
       }
     };
-    const onPinsParentKeydown = (e) => {
-      if (e.key === `Enter` && e.target.dataset.frontId) {
-        window.card.draw(window.data.houses[e.target.dataset.frontId]);
+    const onPinsParentKeydown = (event) => {
+      if (event.key === `Enter` && event.target.dataset.frontId) {
+        window.card.draw(window.data.houses[event.target.dataset.frontId]);
       }
     };
     return {

@@ -38,8 +38,8 @@
     }
     if (markup) {
       markup.addEventListener(`click`, () => hideNode(markup));
-      document.addEventListener(`keydown`, (e) => {
-        if (e.key === `Escape`) {
+      document.addEventListener(`keydown`, (event) => {
+        if (event.key === `Escape`) {
           hideNode(markup);
         }
       });

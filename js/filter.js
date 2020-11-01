@@ -18,8 +18,8 @@
   const form = document.querySelector(`#pins-filter`);
   const initSelectFilter = (name) => {
     const select = form.querySelector(`#housing-${name}`);
-    const onTypeSelectInput = (e) => {
-      e.preventDefault();
+    const onTypeSelectInput = (event) => {
+      event.preventDefault();
       filterSettings[name] = select.value;
       submitFilter();
     };
@@ -28,10 +28,10 @@
   const initCheckboxFilter = () => {
     const featuresCheckboxesFieldset = form.querySelector(`#housing-features`);
     const featuresCheckboxes = featuresCheckboxesFieldset.querySelectorAll(`input[name="features"]`);
-    const onFeatureCheckboxInput = (e) => {
-      e.preventDefault();
-      const featureName = e.target.id.replace(/filter-/gi, ``);
-      if (e.target.checked === true) {
+    const onFeatureCheckboxInput = (event) => {
+      event.preventDefault();
+      const featureName = event.target.id.replace(/filter-/gi, ``);
+      if (event.target.checked === true) {
         filterSettings.features.push(featureName);
       } else {
         window.util.findAndRemove(filterSettings.features, featureName);

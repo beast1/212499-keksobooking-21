@@ -54,13 +54,13 @@
       window.pin.removeActiveStyles();
       window.card.clear();
     };
-    const onCardCloseBtnClick = (e) => {
-      e.preventDefault();
+    const onCardCloseBtnClick = (event) => {
+      event.preventDefault();
       closeCard();
     };
-    const onDocumentKeydown = (e) => {
-      e.preventDefault();
-      if (e.key === `Escape`) {
+    const onDocumentKeydown = (event) => {
+      event.preventDefault();
+      if (event.key === `Escape`) {
         closeCard();
       }
     };

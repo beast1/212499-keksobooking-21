@@ -54,13 +54,13 @@
     addressInput.value = `${coordinates.X}, ${coordinates.Y}`;
   };
   const setMapState = (state) => {
-    const onPinMousedown = (e) => {
-      if (e.button === 0) {
+    const onPinMousedown = (event) => {
+      if (event.button === 0) {
         setMapState(true);
       }
     };
-    const onPinKeydown = (e) => {
-      if (e.key === `Enter`) {
+    const onPinKeydown = (event) => {
+      if (event.key === `Enter`) {
         setMapState(true);
       }
     };
@@ -82,10 +82,10 @@
   };
   const initControlPin = () => {
     const initDrag = () => {
-      const moveControlPin = (e) => {
+      const moveControlPin = (event) => {
         let startCoords = {
-          x: e.clientX,
-          y: e.clientY
+          x: event.clientX,
+          y: event.clientY
         };
 
         const onMouseMove = (moveEvt) => {
@@ -113,10 +113,10 @@
         document.addEventListener(`mousemove`, onMouseMove);
         document.addEventListener(`mouseup`, onMouseUp);
       };
-      const onControlPinMousedown = (e) => {
-        e.preventDefault();
-        if (e.button === 0) {
-          moveControlPin(e);
+      const onControlPinMousedown = (event) => {
+        event.preventDefault();
+        if (event.button === 0) {
+          moveControlPin(event);
         }
       };
       controlPin.addEventListener(`mousedown`, onControlPinMousedown);

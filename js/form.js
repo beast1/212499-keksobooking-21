@@ -2,6 +2,8 @@
 
 (() => {
   const formNode = document.querySelector(`#ad-form`);
+  const priceInput = document.querySelector(`#price`);
+  const INITIAL_MIN_PRICE = 5000;
   const validationLimits = {
     MIN_NAME_LENGTH: 30,
     MAX_NAME_LENGTH: 100,
@@ -28,7 +30,8 @@
         roomsCount: 100,
         guestOptions: [{value: 1, text: `не для гостей`}]
       }
-    ]
+    ],
+    minPrice: 5000
   };
   const initRoomsValidate = () => {
     const roomsSelect = document.querySelector(`#room_number`);
@@ -74,30 +77,28 @@
   };
   const initMinPriceValidate = () => {
     const typeSelect = document.querySelector(`#type`);
-    const priceInput = document.querySelector(`#price`);
-    let currentMinPrice;
-    const typeMinPriceValidate = (e) => {
+    const typeMinPriceValidate = (event) => {
       validationLimits.type.forEach((type) => {
-        if (type.name === e.target.value) {
-          currentMinPrice = type.MIN_PRICE;
-          priceInput.attributes.min = currentMinPrice;
-          priceInput.placeholder = currentMinPrice;
+        if (type.name === event.target.value) {
+          validationLimits.minPrice = type.MIN_PRICE;
+          priceInput.attributes.min = validationLimits.minPrice;
+          priceInput.placeholder = validationLimits.minPrice;
         }
       });
     };
     const minPriceValidate = () => {
       const value = priceInput.value;
 
-      if (value < currentMinPrice) {
-        priceInput.setCustomValidity(`Минимальная цена выбранного типа апартаментов ${currentMinPrice} руб.`);
+      if (value < validationLimits.minPrice) {
+        priceInput.setCustomValidity(`Минимальная цена выбранного типа апартаментов ${validationLimits.minPrice} руб.`);
       } else {
         priceInput.setCustomValidity(``);
       }
 
       priceInput.reportValidity();
     };
-    const onTypeSelectInput = (e) => {
-      typeMinPriceValidate(e);
+    const onTypeSelectInput = (event) => {
+      typeMinPriceValidate(event);
       minPriceValidate();
     };
     const onPriceInput = () => {
@@ -105,6 +106,10 @@
     };
     typeSelect.addEventListener(`input`, onTypeSelectInput);
     priceInput.addEventListener(`input`, onPriceInput);
+  };
+  const resetMinPrice = () => {
+    validationLimits.minPrice = INITIAL_MIN_PRICE;
+    priceInput.placeholder = INITIAL_MIN_PRICE;
   };
   const initTitleValidate = () => {
     const titleInput = document.querySelector(`#title`);
@@ -124,12 +129,13 @@
     titleInput.addEventListener(`input`, onTitleInput);
   };
   const initSubmit = () => {
-    const onSubmit = (e) => {
-      e.preventDefault();
+    const onSubmit = (event) => {
+      event.preventDefault();
       window.upload(new FormData(formNode), (response) => {
         window.pin.close();
         window.card.clear();
         window.filter.reset();
+        resetMinPrice();
         window.util.showUserMessage(`success`, response);
       });
     };
@@ -139,10 +145,10 @@
     const resetBtn = document.querySelector(`.ad-form__reset`);
     const resetForm = () => {
       formNode.reset();
-      // window.util.showUserMessage(`success`, `Форма очищена`);
+      resetMinPrice();
     };
-    const onResetBtnClick = (e) => {
-      e.preventDefault();
+    const onResetBtnClick = (event) => {
+      event.preventDefault();
       resetForm();
       window.pin.close();
       window.filter.reset();
