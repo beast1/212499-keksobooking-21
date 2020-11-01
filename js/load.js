@@ -1,16 +1,21 @@
 'use strict';
 
 (() => {
+  const loadParams = {
+    METHOD: `GET`,
+    RESPONSE_TYPE: `json`,
+    TIMEOUT: `10000`
+  };
   const load = (url, onSuccess, onError) => {
     const xhr = new XMLHttpRequest();
-    xhr.open(`GET`, url);
-    xhr.responseType = `json`;
-    xhr.timeout = 10000;
+    xhr.open(loadParams.METHOD, url);
+    xhr.responseType = loadParams.RESPONSE_TYPE;
+    xhr.timeout = loadParams.TIMEOUT;
     xhr.addEventListener(`error`, function () {
-      onError(`Произошла ошибка соединения`);
+      onError(window.data.messages.load.common);
     });
     xhr.addEventListener(`timeout`, function () {
-      onError(`Запрос не успел выполниться за ${xhr.timeout} мс`);
+      onError(`${window.data.messages.load.timeout.pre} ${xhr.timeout} ${window.data.messages.load.timeout.post}`);
     });
     xhr.addEventListener(`load`, () => {
       let err;
@@ -19,16 +24,16 @@
           onSuccess(xhr.response);
           break;
         case 400:
-          err = `Неверный запрос`;
+          err = window.data.messages.load.err400;
           break;
         case 401:
-          err = `Пользователь не авторизован`;
+          err = window.data.messages.load.err401;
           break;
         case 404:
-          err = `Ничего не найдено`;
+          err = window.data.messages.load.err404;
           break;
         default:
-          err = `Статус ответа: ${xhr.status} ${xhr.statusText}`;
+          err = `${window.data.messages.load.status} ${xhr.status} ${xhr.statusText}`;
       }
       if (err) {
         onError(`${xhr.status} ${xhr.statusText}`);

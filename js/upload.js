@@ -9,19 +9,19 @@
       let err;
       switch (xhr.status) {
         case 200:
-          onSuccess(`Ваша заявка успешно отправлена`);
+          onSuccess(window.data.messages.upload.success);
           break;
         case 400:
-          err = `Неверный запрос`;
+          err = window.data.messages.upload.err400;
           break;
         case 401:
-          err = `Пользователь не авторизован`;
+          err = window.data.messages.upload.err401;
           break;
         case 404:
-          err = `Ничего не найдено`;
+          err = window.data.messages.upload.err404;
           break;
         default:
-          err = `Статус ответа: ${xhr.status} ${xhr.statusText}`;
+          err = `${window.data.messages.upload.status} ${xhr.status} ${xhr.statusText}`;
       }
       if (err) {
         window.util.showUserMessage(`error`, `${xhr.status} ${xhr.statusText}`);

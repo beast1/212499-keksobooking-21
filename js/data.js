@@ -1,6 +1,7 @@
 'use strict';
 
 (() => {
+  const LOAD_URL = `https://21.javascript.pages.academy/keksobooking/data`;
   const houseDataPatterns = {
     types: [`palace`, `flat`, `house`, `bungalow`],
     checkin: [`12:00`, `13:00`, `14:00`],
@@ -34,8 +35,27 @@
   const messages = {
     filter: {
       noResult: `Объявления которые соответствуют заданным фильтрам не были найдены`
+    },
+    load: {
+      common: `Произошла ошибка соединения`,
+      err400: `Неверный запрос`,
+      err401: `Пользователь не авторизован`,
+      err404: `Ничего не найдено`,
+      status: `Статус ответа:`,
+      timeout: {
+        pre: `Запрос не успел выполниться за`,
+        post: `мс`
+      }
+    },
+    upload: {
+      success: `Ваша заявка успешно отправлена`,
+      err400: `Неверный запрос`,
+      err401: `Пользователь не авторизован`,
+      err404: `Ничего не найдено`,
+      status: `Статус ответа:`
     }
   };
+
 
   const generateLocation = () => {
     return {
@@ -96,7 +116,7 @@
     window.util.showUserMessage(`error`, errorMessage);
   };
   const loadHousesData = () => {
-    window.load(`https://21.javascript.pages.academy/keksobooking/data`, onSuccess, onError);
+    window.load(LOAD_URL, onSuccess, onError);
   };
   loadHousesData();
   window.data = {

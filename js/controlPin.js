@@ -1,6 +1,7 @@
 'use strict';
 
 (() => {
+  const ADDRESS_REGEXP = /[^-0-9]/gim;
   const markerOffset = {
     X: 25,
     Y: 70
@@ -48,8 +49,8 @@
   const setAddress = () => {
     const addressInput = document.querySelector(`#address`);
     const coordinates = {
-      X: +controlPin.style.left.replace(/[^-0-9]/gim, ``) + markerOffset.X,
-      Y: +controlPin.style.top.replace(/[^-0-9]/gim, ``) + markerOffset.Y
+      X: +controlPin.style.left.replace(ADDRESS_REGEXP, ``) + markerOffset.X,
+      Y: +controlPin.style.top.replace(ADDRESS_REGEXP, ``) + markerOffset.Y
     };
     addressInput.value = `${coordinates.X}, ${coordinates.Y}`;
   };
