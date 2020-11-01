@@ -1,5 +1,3 @@
 'use strict';
 
-(() => {
-  window.controlPin.init();
-})();
+window.controlPin.init();
