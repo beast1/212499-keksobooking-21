@@ -1,5 +1,4 @@
 "use strict";
-// todo добавить возможность загружать несколько файлов при желании
 (() => {
   const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
   const showMultipleImages = (images, parent) => {
