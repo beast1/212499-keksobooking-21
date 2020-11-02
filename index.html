@@ -173,7 +173,7 @@
           <label class="ad-form__label">Фотография жилья</label>
           <div class="ad-form__photo-container">
             <div class="ad-form__upload">
-              <input type="file" id="images" name="images" accept="image/jpeg,image/png" class="ad-form__input visually-hidden">
+              <input type="file" id="images" name="images" accept="image/jpeg,image/png" class="ad-form__input visually-hidden" multiple>
               <label for="images" class="ad-form__drop-zone">Загрузить<br>фото...</label>
             </div>
             <div class="ad-form__photo"></div>
@@ -248,7 +248,12 @@
     </div>
   </template>
 
-  <script src="bundle.js"></script>
+  <!-- Превью изображений квартиры -->
+  <template id="preview-img">
+    <img src="img/muffin-grey.svg" alt="Превью изображения" width="40" height="44">
+  </template>
+
   <script src="js/imgInput.js"></script>
+  <script src="bundle.js"></script>
 </body>
 </html>
