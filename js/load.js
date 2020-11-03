@@ -5,10 +5,10 @@ const load = (url, onSuccess, onError) => {
   xhr.responseType = `json`;
   xhr.timeout = 10000;
 
-  xhr.addEventListener(`error`, function () {
+  xhr.addEventListener(`error`, () => {
     onError(window.data.messages.load.common);
   });
-  xhr.addEventListener(`timeout`, function () {
+  xhr.addEventListener(`timeout`, () => {
     onError(`${window.data.messages.load.timeout.pre} ${xhr.timeout} ${window.data.messages.load.timeout.post}`);
   });
   xhr.addEventListener(`load`, () => {

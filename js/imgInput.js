@@ -7,13 +7,13 @@ const showMultipleImages = (images, parent) => {
 
   imagesArr.forEach((image) => {
     const imageName = image.name.toLowerCase();
-    const matches = FILE_TYPES.some(function (ending) {
+    const matches = FILE_TYPES.some((ending) => {
       return imageName.endsWith(ending);
     });
 
     if (matches) {
       const reader = new FileReader();
-      reader.addEventListener(`load`, function () {
+      reader.addEventListener(`load`, () => {
         const markup = template.content.querySelector(`img`).cloneNode(true);
         markup.src = reader.result;
         parent.appendChild(markup);
@@ -27,19 +27,19 @@ const initImgInput = (inputSelector, previewSelector, isMultiple) => {
   const input = document.querySelector(inputSelector);
   const preview = document.querySelector(previewSelector);
 
-  input.addEventListener(`change`, function () {
+  input.addEventListener(`change`, () => {
     if (input.files.length === 1) {
       const file = input.files[0];
       const fileName = file.name.toLowerCase();
 
-      const matches = FILE_TYPES.some(function (ending) {
+      const matches = FILE_TYPES.some((ending) => {
         return fileName.endsWith(ending);
       });
 
       if (matches) {
         const reader = new FileReader();
 
-        reader.addEventListener(`load`, function () {
+        reader.addEventListener(`load`, () => {
           preview.src = reader.result;
         });
 

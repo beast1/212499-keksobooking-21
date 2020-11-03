@@ -2,7 +2,7 @@
 
 const DEBOUNCE_INTERVAL = 300;
 
-window.debounce = function (callback) {
+window.debounce = (callback) => {
   let lastTimeout = null;
 
   return (...parameters) => {
