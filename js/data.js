@@ -129,7 +129,7 @@ const onError = (errorMessage) => {
 };
 
 const loadHousesData = () => {
-  window.load(HOUSES_DATA_URL, onSuccess, onError);
+  window.http(`load`, HOUSES_DATA_URL, onSuccess, onError);
 };
 
 loadHousesData();

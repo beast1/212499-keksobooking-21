@@ -30,6 +30,7 @@ const validationLimits = {
   minPrice: 5000
 };
 const INITIAL_MIN_PRICE = 5000;
+const OFFER_CATCHER_URL = ` https://21.javascript.pages.academy/keksobooking`;
 const formNode = document.querySelector(`#ad-form`);
 const priceInput = document.querySelector(`#price`);
 
@@ -143,15 +144,21 @@ const initTitleValidate = () => {
 };
 
 const initSubmit = () => {
+  const onSuccess = (response) => {
+    window.pin.close();
+    window.card.clear();
+    window.filter.reset();
+    resetMinPrice();
+    window.util.showUserMessage(`success`, response);
+  };
+
+  const onError = (message) => {
+    window.util.showUserMessage(`error`, message);
+  };
+
   const onSubmit = (event) => {
     event.preventDefault();
-    window.upload(new FormData(formNode), (response) => {
-      window.pin.close();
-      window.card.clear();
-      window.filter.reset();
-      resetMinPrice();
-      window.util.showUserMessage(`success`, response);
-    });
+    window.http(`upload`, OFFER_CATCHER_URL, onSuccess, onError, new FormData(formNode));
   };
 
   formNode.addEventListener(`submit`, onSubmit);
