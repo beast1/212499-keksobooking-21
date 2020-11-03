@@ -6,10 +6,12 @@ const initPins = () => {
   const pinsFragment = document.createDocumentFragment();
   const pinsParent = document.querySelector(`.map__pins`);
   const pins = [];
+
   const drawPins = (pinsStructuredData) => {
     pinsStructuredData.forEach((pinData) => {
       const pinMarkup = pinsTemplate.content.querySelector(`.map__pin`).cloneNode(true);
       const pinAvatar = pinMarkup.querySelector(`img`);
+
       pinAvatar.src = pinData.author.avatar;
       pinMarkup.style = `left: ${pinData.location.x - window.data.pinOffset.X}px; top: ${pinData.location.y - window.data.pinOffset.Y}px`;
       pinMarkup.attributes.src = pinData.author.avatar;
@@ -18,15 +20,18 @@ const initPins = () => {
       pinsFragment.appendChild(pinMarkup);
       pins.push(pinMarkup);
     });
+
     pinsParent.appendChild(pinsFragment);
     pinsParent.addEventListener(`click`, onPinsParentClick);
     pinsParent.addEventListener(`keydown`, onPinsParentKeydown);
   };
+
   const clearPins = () => {
     pins.forEach((pin) => {
       pin.remove();
     });
   };
+
   const closePins = () => {
     map.classList.add(`map--faded`);
     clearPins();
@@ -34,12 +39,14 @@ const initPins = () => {
     pinsParent.removeEventListener(`click`, onPinsParentClick);
     pinsParent.removeEventListener(`keydown`, onPinsParentKeydown);
   };
+
   const removeActiveStyles = () => {
     const showedPins = pinsParent.querySelectorAll(`.map__pin`);
     showedPins.forEach((pin) => {
       pin.classList.remove(`map__pin--active`);
     });
   };
+
   const onPinsParentClick = (event) => {
     const targetPin = event.target.offsetParent;
     if (targetPin) {
@@ -50,11 +57,13 @@ const initPins = () => {
       }
     }
   };
+
   const onPinsParentKeydown = (event) => {
     if (event.key === `Enter` && event.target.dataset.frontId) {
       window.card.draw(window.data.houses[event.target.dataset.frontId]);
     }
   };
+
   return {
     draw: drawPins,
     clear: clearPins,

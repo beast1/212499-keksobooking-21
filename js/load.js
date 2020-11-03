@@ -1,15 +1,10 @@
 'use strict';
 
-const loadParams = {
-  METHOD: `GET`,
-  RESPONSE_TYPE: `json`,
-  TIMEOUT: `10000`
-};
 const load = (url, onSuccess, onError) => {
   const xhr = new XMLHttpRequest();
-  xhr.open(loadParams.METHOD, url);
-  xhr.responseType = loadParams.RESPONSE_TYPE;
-  xhr.timeout = loadParams.TIMEOUT;
+  xhr.responseType = `json`;
+  xhr.timeout = 10000;
+
   xhr.addEventListener(`error`, function () {
     onError(window.data.messages.load.common);
   });
@@ -19,16 +14,16 @@ const load = (url, onSuccess, onError) => {
   xhr.addEventListener(`load`, () => {
     let err;
     switch (xhr.status) {
-      case 200:
+      case window.data.statusDictionary.success:
         onSuccess(xhr.response);
         break;
-      case 400:
+      case window.data.statusDictionary.badRequest:
         err = window.data.messages.load.err400;
         break;
-      case 401:
+      case window.data.statusDictionary.missingAuth:
         err = window.data.messages.load.err401;
         break;
-      case 404:
+      case window.data.statusDictionary.notFound:
         err = window.data.messages.load.err404;
         break;
       default:
@@ -39,6 +34,7 @@ const load = (url, onSuccess, onError) => {
     }
   });
 
+  xhr.open(`GET`, url);
   xhr.send();
 };
 window.load = load;

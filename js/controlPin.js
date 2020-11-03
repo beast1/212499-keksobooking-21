@@ -5,17 +5,21 @@ const markerOffset = {
   X: 25,
   Y: 70
 };
+
 const controlPin = document.querySelector(`.map__pin--main`);
 const controlPinInitPosition = {
   LEFT: controlPin.style.left,
   TOP: controlPin.style.top
 };
+
 const setDisabledState = () => {
   window.util.hideNode(controlPin);
 };
+
 const setActiveState = () => {
   window.util.showNode(controlPin);
 };
+
 const activateFiltersForm = (state) => {
   const filterForm = document.querySelector(`.map__filters`);
   const filters = filterForm.querySelectorAll(`select, input`);
@@ -24,6 +28,7 @@ const activateFiltersForm = (state) => {
     window.util.changeDisabledAttr(filter, !state);
   });
 };
+
 const activateOrderForm = (state) => {
   const form = document.querySelector(`.ad-form`);
   const formFieldsetArr = form.querySelectorAll(`fieldset`);
@@ -45,6 +50,7 @@ const activateOrderForm = (state) => {
     form.reset();
   }
 };
+
 const setAddress = () => {
   const addressInput = document.querySelector(`#address`);
   const coordinates = {
@@ -53,17 +59,20 @@ const setAddress = () => {
   };
   addressInput.value = `${coordinates.X}, ${coordinates.Y}`;
 };
+
 const setMapState = (state) => {
   const onPinMousedown = (event) => {
     if (event.button === 0) {
       setMapState(true);
     }
   };
+
   const onPinKeydown = (event) => {
     if (event.key === `Enter`) {
       setMapState(true);
     }
   };
+
   if (state) {
     const map = document.querySelector(`.map`);
     map.classList.remove(`map--faded`);
@@ -119,8 +128,10 @@ const initControlPin = () => {
         moveControlPin(event);
       }
     };
+
     controlPin.addEventListener(`mousedown`, onControlPinMousedown);
   };
+
   setDisabledState();
   setMapState(false);
   setAddress();

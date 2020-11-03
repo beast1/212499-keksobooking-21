@@ -6,6 +6,7 @@ const types = {
   house: `Дом`,
   palace: `Дворец`
 };
+
 const initCard = () => {
   const cardTemplate = document.querySelector(`#card`);
   const cardMarkup = cardTemplate.content.querySelector(`.map__card`).cloneNode(true);
@@ -15,6 +16,7 @@ const initCard = () => {
   const featureMarkup = featuresParent.querySelector(`.popup__feature`).cloneNode(true);
   const photosParent = cardMarkup.querySelector(`.popup__photos`);
   const photoMarkup = photosParent.querySelector(`.popup__photo`).cloneNode(true);
+
   const drawCardFeatures = (data) => {
     if (data && featuresParent) {
       const featuresFragment = document.createDocumentFragment();
@@ -28,6 +30,7 @@ const initCard = () => {
       window.util.hideNode(featuresParent);
     }
   };
+
   const drawCardPhotos = (data) => {
     if (data && photosParent) {
       const photosFragment = document.createDocumentFragment();
@@ -41,6 +44,7 @@ const initCard = () => {
       window.util.hideNode(photosParent);
     }
   };
+
   const drawCardAvatar = (data) => {
     const avatar = cardMarkup.querySelector(`.popup__avatar`);
     if (data && avatar) {
@@ -49,20 +53,24 @@ const initCard = () => {
       window.util.hideNode(avatar);
     }
   };
+
   const closeCard = () => {
     window.pin.removeActiveStyles();
     window.card.clear();
   };
+
   const onCardCloseBtnClick = (event) => {
     event.preventDefault();
     closeCard();
   };
+
   const onDocumentKeydown = (event) => {
     event.preventDefault();
     if (event.key === `Escape`) {
       closeCard();
     }
   };
+
   const drawCard = (housesData) => {
     window.util.drawTextBlock(`.popup__title`, housesData.offer.title, cardMarkup);
     window.util.drawTextBlock(`.popup__text--address`, housesData.offer.address, cardMarkup);
@@ -80,14 +88,17 @@ const initCard = () => {
     cardCloseBtn.addEventListener(`click`, onCardCloseBtnClick);
     document.addEventListener(`keydown`, onDocumentKeydown);
   };
+
   const clearCard = () => {
     cardMarkup.classList.add(`hidden`);
     cardCloseBtn.removeEventListener(`click`, onCardCloseBtnClick);
     document.removeEventListener(`click`, onDocumentKeydown);
   };
+
   return {
     draw: drawCard,
     clear: clearCard
   };
 };
+
 window.card = initCard();

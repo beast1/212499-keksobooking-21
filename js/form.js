@@ -1,8 +1,5 @@
 'use strict';
 
-const formNode = document.querySelector(`#ad-form`);
-const priceInput = document.querySelector(`#price`);
-const INITIAL_MIN_PRICE = 5000;
 const validationLimits = {
   MIN_NAME_LENGTH: 30,
   MAX_NAME_LENGTH: 100,
@@ -32,10 +29,15 @@ const validationLimits = {
   ],
   minPrice: 5000
 };
+const INITIAL_MIN_PRICE = 5000;
+const formNode = document.querySelector(`#ad-form`);
+const priceInput = document.querySelector(`#price`);
+
 const initRoomsValidate = () => {
   const roomsSelect = document.querySelector(`#room_number`);
   const capacitySelect = document.querySelector(`#capacity`);
   const capacityOption = document.querySelector(`#capacity option`);
+
   const roomsValidate = () => {
     validationLimits.rooms.forEach((limit) => {
       if (limit.roomsCount === +roomsSelect.value) {
@@ -59,9 +61,11 @@ const initRoomsValidate = () => {
   roomsSelect.addEventListener(`input`, onRoomsSelectInput);
   roomsValidate();
 };
+
 const initCheckinValidate = () => {
   const checkinInput = document.querySelector(`#timein`);
   const checkoutInput = document.querySelector(`#timeout`);
+
   const updCheckoutValue = () => {
     checkoutInput.value = checkinInput.value;
   };
@@ -71,11 +75,14 @@ const initCheckinValidate = () => {
   const onCheckinInput = () => {
     updCheckoutValue();
   };
+
   checkinInput.addEventListener(`input`, onCheckinInput);
   checkoutInput.addEventListener(`input`, updCheckinValue);
 };
+
 const initMinPriceValidate = () => {
   const typeSelect = document.querySelector(`#type`);
+
   const typeMinPriceValidate = (event) => {
     validationLimits.type.forEach((type) => {
       if (type.name === event.target.value) {
@@ -85,6 +92,7 @@ const initMinPriceValidate = () => {
       }
     });
   };
+
   const minPriceValidate = () => {
     const value = priceInput.value;
 
@@ -96,6 +104,7 @@ const initMinPriceValidate = () => {
 
     priceInput.reportValidity();
   };
+
   const onTypeSelectInput = (event) => {
     typeMinPriceValidate(event);
     minPriceValidate();
@@ -103,15 +112,19 @@ const initMinPriceValidate = () => {
   const onPriceInput = () => {
     minPriceValidate();
   };
+
   typeSelect.addEventListener(`input`, onTypeSelectInput);
   priceInput.addEventListener(`input`, onPriceInput);
 };
+
 const resetMinPrice = () => {
   validationLimits.minPrice = INITIAL_MIN_PRICE;
   priceInput.placeholder = INITIAL_MIN_PRICE;
 };
+
 const initTitleValidate = () => {
   const titleInput = document.querySelector(`#title`);
+
   const onTitleInput = () => {
     const valueLength = titleInput.value.length;
 
@@ -125,8 +138,10 @@ const initTitleValidate = () => {
 
     titleInput.reportValidity();
   };
+
   titleInput.addEventListener(`input`, onTitleInput);
 };
+
 const initSubmit = () => {
   const onSubmit = (event) => {
     event.preventDefault();
@@ -138,10 +153,13 @@ const initSubmit = () => {
       window.util.showUserMessage(`success`, response);
     });
   };
+
   formNode.addEventListener(`submit`, onSubmit);
 };
+
 const initResetBtn = () => {
   const resetBtn = document.querySelector(`.ad-form__reset`);
+
   const resetForm = () => {
     formNode.reset();
     resetMinPrice();
@@ -154,11 +172,14 @@ const initResetBtn = () => {
     window.card.clear();
     window.controlPin.setAddress();
   };
+
   resetBtn.addEventListener(`click`, onResetBtnClick);
 };
+
 window.imgInput.init(`.ad-form__field input`, `.ad-form-header__preview img`);
 window.imgInput.init(`.ad-form__upload input`, `.ad-form__photo`, true);
 initResetBtn();
+
 window.form = {
   rooms: {
     initValidation: initRoomsValidate

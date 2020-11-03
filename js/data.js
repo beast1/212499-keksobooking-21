@@ -1,6 +1,6 @@
 'use strict';
 
-const LOAD_URL = `https://21.javascript.pages.academy/keksobooking/data`;
+const HOUSES_DATA_URL = `https://21.javascript.pages.academy/keksobooking/data`;
 const houseDataPatterns = {
   types: [`palace`, `flat`, `house`, `bungalow`],
   checkin: [`12:00`, `13:00`, `14:00`],
@@ -55,18 +55,28 @@ const messages = {
   }
 };
 
+const statusDictionary = {
+  success: 200,
+  badRequest: 400,
+  missingAuth: 401,
+  notFound: 404
+};
+
 const generateLocation = () => {
   return {
     x: window.util.randomInteger(mapOverlay.x.START, mapOverlay.x.END),
     y: window.util.randomInteger(mapOverlay.y.START + pinOffset.Y, mapOverlay.y.END)
   };
 };
+
 const generateFeatures = (houseRandomData) => {
   return houseRandomData.features.filter(() => window.util.randomInteger(0, 1));
 };
+
 const generatePhotos = (houseRandomData) => {
   return houseRandomData.photos.filter(() => window.util.randomInteger(0, 1));
 };
+
 const generateHousesData = (houseRandomData, pinsCount) => {
   const pins = [];
 
@@ -99,27 +109,34 @@ const generateHousesData = (houseRandomData, pinsCount) => {
 
   return pins;
 };
+
 const addFrontId = (houses) => {
   houses.forEach((house, i) => {
     house.frontId = i;
   });
   return houses;
 };
+
 const validateHousesResponse = (response) => response.filter((item) => item.offer);
+
 const onSuccess = (response) => {
   window.data.houses = validateHousesResponse(addFrontId(response));
   window.controlPin.setActiveState();
 };
+
 const onError = (errorMessage) => {
   window.util.showUserMessage(`error`, errorMessage);
 };
+
 const loadHousesData = () => {
-  window.load(LOAD_URL, onSuccess, onError);
+  window.load(HOUSES_DATA_URL, onSuccess, onError);
 };
+
 loadHousesData();
 window.data = {
   mapOverlay,
   pinOffset,
   mockHouses: generateHousesData(houseDataPatterns, 8),
-  messages
+  messages,
+  statusDictionary
 };
