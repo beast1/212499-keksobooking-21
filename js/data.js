@@ -118,8 +118,9 @@ const onSuccess = (response) => {
   window.controlPin.setActiveState();
 };
 
-const onError = (errorMessage) => {
-  window.util.showUserMessage(`error`, errorMessage);
+const onError = () => {
+  window.data.houses = validateHousesResponse(addFrontId(window.data.mockHouses));
+  window.controlPin.setActiveState();
 };
 
 const loadHousesData = () => {
